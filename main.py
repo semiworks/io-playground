@@ -12,32 +12,31 @@ for d in os.listdir(lib_path):
     if os.path.isdir(abs_path):
         sys.path.append(abs_path)
 
-import aiohttp
-import aiohttp.web
+import web
 
 
-async def serve_index(request):
-    txt = "Hello World"
-    binary = txt.encode('utf8')
-
-    resp = aiohttp.web.StreamResponse()
-    resp.content_length = len(binary)
-    resp.content_type = 'text/plain'
-
-    await resp.prepare(request)
-    resp.write(binary)
-
-    return resp
-
-
-async def init_web():
-    # create an aiohttp application
-    app = aiohttp.web.Application()
-    app.router.add_get('/', serve_index)
-    return app
+packages = [
+    web
+]
 
 
 if __name__ == "__main__":
+
+    # get event loop
     loop = asyncio.get_event_loop()
-    app = loop.run_until_complete(init_web())
-    aiohttp.web.run_app(app)
+
+    # initialize all packages
+    for package in packages:
+        loop.run_until_complete(package.start())
+
+    try:
+        loop.run_forever()
+    except KeyboardInterrupt:
+        pass
+
+    # shutdown packages
+    for package in reversed(packages):
+        loop.run_until_complete(package.shutdown())
+
+    # close the loop
+    loop.close()
