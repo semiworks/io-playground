@@ -1,5 +1,0 @@
-setuptools-git==1.2
-
--r doc.txt
--r ci-wheel.txt
--e .
