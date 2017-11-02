@@ -1,0 +1,45 @@
+sudo: false
+language: python
+
+python:
+  - 3.6
+  - 3.5
+  - 3.4
+  - 3.3
+  - 2.7
+  - 2.6
+  - pypy
+
+env:
+  - TOXENV=py,codecov
+
+matrix:
+  include:
+    - python: nightly
+      env: TOXENV=py
+    - python: 3.6
+      env: TOXENV=docs-html
+
+install:
+  - pip install tox
+
+script:
+  - tox
+
+cache:
+  - pip
+
+branches:
+  only:
+    - master
+    - /^.*-maintenance$/
+
+notifications:
+  email: false
+  irc:
+    channels:
+      - "chat.freenode.net#pocoo"
+    on_success: change
+    on_failure: always
+    use_notice: true
+    skip_join: true
