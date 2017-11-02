@@ -1,0 +1,43 @@
+services:
+  - docker
+
+language: python
+python:
+  - 3.4
+  - 3.5
+  - 3.6
+  - 3.7-dev
+
+install:
+  - pip install cython
+  - pip install twine
+  - pip install -r requirements/ci.txt
+  - pip install codecov
+  - pip install mypy-lang
+
+
+script:
+  - pytest --cov yarl ./tests/ ./yarl/ --flake8
+  - make doc
+  - python setup.py check -rm
+  - if python -c "import sys; sys.exit(sys.version_info < (3,6))"; then
+        python setup.py check -s;
+    fi
+#        make mypy;
+
+
+after_success:
+  - codecov
+  - ./run_docker.sh
+
+
+deploy:
+  provider: pypi
+  user: andrew.svetlov
+  password:
+    secure: gQbZ9rvJKZQ5uDM9E2FpWsLdOkTd3ryJtz5sOLg1l1GlkCKjNyAEsa5zZFfiXdPbBdkinXwo0ti/SOqzmoetU4Kk4IVkycSD0E/jFqJ+hJqSQHMiQbpjQuSFaTn6bOFeysDxr8qmPKbXQs7kQw2aVzNGj6qt3vdUlKWWbwxiBw7hNvddXgzk01WeiXXwhU1gG6fscnSLrbWng+0DzlCuUY4RCrvKz1Ol581prLXYpak6T0SGto36fq5XvpxfJQwI72r/1I06khLQYp9z1ddsGJWVOEB2G9AHWraPHBReQphesWr5Sa0tEyBdVhiLrcLxTJn3ag/sx4Cnzuuc3kiFKtX01db8TOK56GF8Mji6jnITjQLlZuLMv1oweg1epWJCC3eg3NWUqddDAMLMDmd3gM4tp8V66hnknPvx74TTbGMuBL8xe4IC96369gGoqtLHMyv1zz5XZgEEpT6M8cqEleHiWtHUDHbxmbKbKk3r2zAB6RAyeDDyRuqGq1cFWx0S/eQsaDCbk5EWxAqz5fepcbDDsXcNP6GawOZxqWk2C1h0Z+nLa2yqB2Nfz+3eV9GoaG/72MmpJO0MWR0OZaYilr7U7Q2OplEgqTlvdCD6y1GraLXiaaCBc6uljZM3ns3E3WxI2KpXhNUeA2iGVWRvTwg+i6jzZU705aNuYHyo5XU=
+  distributions: "sdist"
+  on:
+    tags: true
+    all_branches: true
+    python: 3.5
