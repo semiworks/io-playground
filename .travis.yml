@@ -1,0 +1,33 @@
+language: python
+python:
+  - 3.4
+  - 3.5
+  - 3.6
+
+install:
+  - pip install -e .
+  - pip install -r requirements.txt
+  - pip install codecov
+
+script:
+  - pytest tests
+  - python setup.py check -rm
+  - if python -c "import sys; sys.exit(sys.version_info < (3,5))"; then
+        python setup.py check -s;
+    fi
+
+
+after_success:
+  - codecov
+
+
+deploy:
+  provider: pypi
+  user: andrew.svetlov
+  password:
+    secure: "NItBM66tfmbrXW1WE1bEzILYVhNl/es+J1Fbtvq1qNnxhtmJCmKyXvlCKZOCWRK5/uEsW7vB55Cjt3mp7UmTnQ6C0d0bibX7P6Ij3bRr+4UtmHY6RT4xQgzmdhSiizUjwG5FRkyLwhS79rn2gG+vLcGlgMEENmz+2GfLUe4mSMrS5+Ldobi9ww0ODXIC6p6JY8O+RMvxqXpUHr+nt3TI9VDdfhYuCQLA1JqmWJ8jJXcu+Fp4dtXRtaBQgnHMoYwVN5N8/PoM+sHBmdl89WmC2Q8QHuQvX6f/FaH0RzZPh86J9Q+Zub1LwkS/uefSPG2ngwcHd4lvluF2wE5gPf0aQkMoTzMqy6narZvXIzZppkBwOflbld1d0h9Fk4QzZvMfWUCDhjfzlA7wzB5rCYsTsnxEFZQhX1NIjND8AlLUFjDlbrP7UZs3HlZa5LMlH/JN04nCt4+QvxvvXS4lINInUxzgRKh0QsifZedKLLXVew9QZQgXW0RYp61koEEjaZj6Oe//Er/qSOnh3kyYmy8aLSnMjhfBWsVrtnyU7wbcsCQBihCctnCVuyobOgj9taxl4EHGemSyc2LtceQWm4M0kpEtBTb75Qd0hKsg6ufZOaoVGFL/HiPv25VP5uDHSzTii18xBvgTnISb/4hW5kr/BJUNpPo8OAAjnDq0v3jQhEc="
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
+    all_branches: true
+    python: 3.5
