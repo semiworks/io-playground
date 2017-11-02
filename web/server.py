@@ -1,8 +1,11 @@
 
+import os
 import asyncio
 
 import aiohttp
 import aiohttp.web
+import aiohttp_jinja2
+import jinja2
 
 
 class WebServer(object):
@@ -13,6 +16,11 @@ class WebServer(object):
 
         # create web application
         self.__web_app = aiohttp.web.Application()
+
+        # initialize jinja2
+        this_path = os.path.dirname(__file__)
+        templates_path = os.path.join(this_path, 'templates')
+        aiohttp_jinja2.setup(self.__web_app, loader=jinja2.FileSystemLoader(templates_path))
 
         # add a route
         self.__web_app.router.add_get('/', self.serve_index)
@@ -37,17 +45,9 @@ class WebServer(object):
             pass
 
     async def serve_index(self, request):
-        txt = "Hello World"
-        binary = txt.encode('utf8')
-
-        resp = aiohttp.web.StreamResponse()
-        resp.content_length = len(binary)
-        resp.content_type = 'text/plain'
-
-        await resp.prepare(request)
-        resp.write(binary)
-
-        return resp
+        context = {'title': 'io playground', 'body': 'Hello <strong>World!</strong>'}
+        response = aiohttp_jinja2.render_template('hello_world.tmpl.html', request, context)
+        return response
 
     async def shutdown(self):
         if self.__web_srv is not None:

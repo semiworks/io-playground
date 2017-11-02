@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     # get event loop
     loop = asyncio.get_event_loop()
+    loop.set_debug(True)
 
     # initialize all packages
     for package in packages:
