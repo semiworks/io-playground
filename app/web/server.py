@@ -3,13 +3,13 @@ import os
 import asyncio
 
 import aiohttp
-import aiohttp.web
+#import aiohttp.web
 import aiohttp_jinja2
 import jinja2
 import aiohttp_session
 import aiohttp_security
 
-import web
+import app.web
 from .handlers import configure_handlers
 
 
@@ -28,7 +28,7 @@ class WebServer(object):
 
         # initialize security
         policy = aiohttp_security.SessionIdentityPolicy()
-        aiohttp_security.setup(self.__web_app, policy, web.AuthorizationPolicy())
+        aiohttp_security.setup(self.__web_app, policy, app.web.AuthorizationPolicy())
 
         # initialize jinja2
         this_path = os.path.dirname(__file__)
