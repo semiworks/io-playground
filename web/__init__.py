@@ -1,5 +1,6 @@
 
 from .server import WebServer
+from .authorization_policy import AuthorizationPolicy
 
 
 # the server instance
