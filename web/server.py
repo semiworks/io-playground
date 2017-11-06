@@ -6,6 +6,11 @@ import aiohttp
 import aiohttp.web
 import aiohttp_jinja2
 import jinja2
+import aiohttp_session
+import aiohttp_security
+
+import web
+from .handlers import configure_handlers
 
 
 class WebServer(object):
@@ -17,13 +22,21 @@ class WebServer(object):
         # create web application
         self.__web_app = aiohttp.web.Application()
 
+        # initialize sessions
+        storage = aiohttp_session.SimpleCookieStorage()
+        aiohttp_session.setup(self.__web_app, storage)
+
+        # initialize security
+        policy = aiohttp_security.SessionIdentityPolicy()
+        aiohttp_security.setup(self.__web_app, policy, web.AuthorizationPolicy())
+
         # initialize jinja2
         this_path = os.path.dirname(__file__)
         templates_path = os.path.join(this_path, 'templates')
         aiohttp_jinja2.setup(self.__web_app, loader=jinja2.FileSystemLoader(templates_path))
 
         # add a route
-        self.__web_app.router.add_get('/', self.serve_index)
+        configure_handlers(self.__web_app)
 
         # create a socket handler
         self.__web_hndlr = self.__web_app.make_handler(loop=loop)
@@ -46,7 +59,7 @@ class WebServer(object):
 
     async def serve_index(self, request):
         context = {'title': 'io playground', 'body': 'Hello <strong>World!</strong>'}
-        response = aiohttp_jinja2.render_template('hello_world.tmpl.html', request, context)
+        response = aiohttp_jinja2.render_template('index.tmpl.html', request, context)
         return response
 
     async def shutdown(self):
