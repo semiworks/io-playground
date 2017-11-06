@@ -3,14 +3,12 @@ import os
 import asyncio
 
 import aiohttp
-#import aiohttp.web
 import aiohttp_jinja2
 import jinja2
 import aiohttp_session
 import aiohttp_security
 
 import app.web
-from .handlers import configure_handlers
 
 
 class WebServer(object):
@@ -21,6 +19,14 @@ class WebServer(object):
 
         # create web application
         self.__web_app = aiohttp.web.Application()
+
+        # setup sessions
+        router = self.__web_app.router
+        router.add_get ('/',          app.web.LoginController.show_login,     name='user.show_login')
+        router.add_post('/login',     app.web.LoginController.login,          name='user.login')
+        router.add_get ('/logout',    app.web.LoginController.logout,         name='user.logout')
+        router.add_get ('/public',    app.web.LoginController.internal_page,  name='user.public')
+        router.add_get ('/protected', app.web.LoginController.protected_page, name='user.protected')
 
         # initialize sessions
         storage = aiohttp_session.SimpleCookieStorage()
@@ -33,10 +39,10 @@ class WebServer(object):
         # initialize jinja2
         this_path = os.path.dirname(__file__)
         templates_path = os.path.join(this_path, 'templates')
-        aiohttp_jinja2.setup(self.__web_app, loader=jinja2.FileSystemLoader(templates_path))
-
-        # add a route
-        configure_handlers(self.__web_app)
+        env = aiohttp_jinja2.setup(self.__web_app, loader=jinja2.FileSystemLoader(templates_path))
+        # manipulate global context variables
+        del env.globals['app']
+        env.globals['route'] = self.route
 
         # create a socket handler
         self.__web_hndlr = self.__web_app.make_handler(loop=loop)
@@ -81,3 +87,6 @@ class WebServer(object):
             await self.__web_app.shutdown()
             await self.__web_app.cleanup()
             self.__web_app = None
+
+    def route(self, name, **kwargs):
+        return self.__web_app.router[name].url_for().with_query(kwargs)

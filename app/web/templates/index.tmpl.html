@@ -5,15 +5,15 @@
     </head>
     <body>
          <p>{{ message }}</p>
-        <form action="/login" method="post">
+        <form action="{{ route('user.login') }}" method="post">
             Login:
             <input type="text" name="username">
             Password:
             <input type="password" name="password">
             <input type="submit" value="Login">
         </form>
-        <a href="/logout">Logout</a>
-        <a href="/public">Public</a>
-        <a href="/protected">Protected</a>
+        <a href="{{ route('user.logout') }}">Logout</a>
+        <a href="{{ route('user.public') }}">Public</a>
+        <a href="{{ route('user.protected') }}">Protected</a>
     </body>
 </html>
