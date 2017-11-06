@@ -1,0 +1,51 @@
+language: python
+python:
+  - 3.4.3
+  - 3.5
+  - nightly
+
+install:
+# - pip install --upgrade setuptools
+- pip install wheel
+- pip install hiredis
+- pip install flake8
+- pip install aiohttp
+- pip install aioredis
+- pip install cryptography
+- pip install pynacl
+- pip install pytest
+- pip install pytest-aiohttp
+- pip install pytest-cov
+- pip install codecov
+- python setup.py develop
+
+script:
+- make cov
+- python setup.py check -rm
+- if python -c "import sys; sys.exit(sys.version_info < (3,5))"; then
+      python setup.py check -s;
+  fi
+
+after_success:
+- codecov
+
+env:
+  global:
+  - REDIS_PORT=6379
+  matrix:
+  - PYTHONASYNCIODEBUG=x
+  - PYTHONASYNCIODEBUG=
+services:
+  - redis-server
+sudo: false
+
+deploy:
+  provider: pypi
+  user: andrew.svetlov
+  password:
+    secure: "HZ9GfwquRRfzvV8quu8dMdOEY7akGDiSl1yyrWoiqvr2pFq/Z/EQGQPNB7E0HpVYOvx4LqortOz41C/TxSuLRXSHzDWEK9ddXSxTrBtoLMEQKjGMe6AhAW+w/q6/rENb9LAQ0OZuLybtJuUYO0zoGByqyBUsyDflOnhMZ2EAwKg="
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
+    all_branches: true
+    python: 3.5
