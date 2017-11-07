@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    </head>
+
+    <body>
+
+        <header>
+            <nav class="nav">
+                <a href="{{ route('show_index') }}" class="nav-left"><img src="images/logo.svg" /></a>
+                <a href="{{ route('show_index') }}" class="nav-left">ioPlayground</a>
+
+{% if user(request) is not none %}
+                <a href="{{ route('user.logout') }}" class="nav-right">Abmelden</a>
+                <span class="nav-right">Hi {{ user(request) }}</span>
+{% else %}
+                <a href="#" class="nav-right">Anmelden</a>
+{% endif %}
+
+            </nav>
+        </header>
+
+        <section id="content">
+{% block content %}
+{% endblock %}
+        </section>
+
+        <footer>
+        </footer>
+
+    </body>
+
+</html>

@@ -1,32 +1,14 @@
 
-import functools
-
 import aiohttp
 import aiohttp_security
-import aiohttp_jinja2
+
+from .controller import Controller
 
 
-def require(permission):
-    def wrapper(f):
-        @functools.wraps(f)
-        async def wrapped(request):
-            # NOTE: always fails if no user logged in
-            has_perm = await aiohttp_security.permits(request, permission)
-            if not has_perm:
-                message = 'User has no permission {}'.format(permission)
-                raise aiohttp.web.HTTPForbidden(body=message.encode())
-            return await f(request)
-        return wrapped
-    return wrapper
+class LoginController(Controller):
 
-
-class LoginController(object):
-
-    def __init__(self):
-        pass
-
-    @staticmethod
-    async def show_login(request):
+    async def show_login(self, request):
+        # get logged in user
         username = await aiohttp_security.authorized_userid(request)
 
         context = {
@@ -39,10 +21,9 @@ class LoginController(object):
         else:
             context['message'] = 'You need to login!'
 
-        return aiohttp_jinja2.render_template('index.tmpl.html', request, context)
+        return await self.render('login.tmpl.html', request, context)
 
-    @staticmethod
-    async def login(request):
+    async def login(self, request):
         response = aiohttp.web.HTTPFound('/')
 
         data = await request.post()
@@ -54,31 +35,11 @@ class LoginController(object):
             await aiohttp_security.remember(request, response, username)
             return response
 
+        # TODO: redirect back with errors?
         return aiohttp.web.HTTPUnauthorized(body='Invalid username / password combination')
 
-    @staticmethod
-    @require('public')
-    async def logout(request):
-        response = aiohttp.web.Response(text='You have been logged out', content_type='text/html')
+    @Controller.require()
+    async def logout(self, request):
+        response = aiohttp.web.HTTPFound(await request.app.route('show_index'))
         await aiohttp_security.forget(request, response)
-        return response
-
-    @staticmethod
-    @require('public')
-    async def internal_page(request):
-        # pylint: disable=unused-argument
-        response = aiohttp.web.Response(
-            text='This page is visible for all registered users',
-            content_type='text/html',
-        )
-        return response
-
-    @staticmethod
-    @require('protected')
-    async def protected_page(request):
-        # pylint: disable=unused-argument
-        response = aiohttp.web.Response(
-            text='You are on protected page',
-            content_type='text/html',
-        )
         return response
