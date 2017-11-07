@@ -10,6 +10,10 @@ a:link {
     color: black;
 }
 
+#content {
+    padding: 20px;
+}
+
 /* navigation bar */
 
 .nav {
@@ -38,4 +42,50 @@ a:link {
     height: 30px;
     line-height: 30px;
     text-align: center;
+}
+
+/* login form */
+
+.panel {
+    padding: 16px;
+    background: #fff;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 70px;
+    border: #ccc solid 1px;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+.container {
+    padding: 16px;
+}
+
+input[type=text],
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #0066cc;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
 }
