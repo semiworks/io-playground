@@ -1,10 +1,12 @@
 
 import asyncio
 
+import app.db
 import app.web
 
 
 packages = [
+    app.db,
     app.web
 ]
 
