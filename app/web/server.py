@@ -48,6 +48,7 @@ class WebServer(aiohttp.web.Application):
         self.__jinja2.globals['user']  = self.user
         self.__jinja2.globals['url']   = self.url
         self.__jinja2.globals['str']   = str
+        self.__jinja2.globals['len']   = len
 
         # create a socket handler
         self.__web_hndlr = self.make_handler(loop=loop)

@@ -41,17 +41,25 @@ class DeviceProperty(object):
                 self.value = config_dict["default"]
 
     @property
+    def readonly(self):
+        return self.__readonly
+
+    @property
     def is_object(self):
         return self.__type == object
 
     @property
-    def value(self, value):
+    def value(self):
         # TODO: type conversion
-        self.__value = value
-
-    @value.setter
-    def set_value(self):
         return self.__value
+
+    @property
+    def type(self):
+        return self.__type
+
+    @property
+    def properties(self):
+        return self.__properties
 
     def __getattr__(self, name):
         # check if this is one of our dynamic properties
@@ -59,14 +67,18 @@ class DeviceProperty(object):
             # if this is an obect, directly return it, otherwise return the value
             if self.__properties[name].is_object:
                 return self.__properties[name]
-            return self.__properties[name].get_value()
+            return self.__properties[name].value
 
         else:
             # Default behaviour
-            return super(DeviceProperty, self).__getattr__(name)
+            return super().__getattr__(name)
 
     def __setattr__(self, name, value):
-        if not name.startswith("_") and name in self.__properties:
+        if name == "value":
+            self.__value = value
+
+        elif not name.startswith("_") and name in self.__properties:
             self.__properties[name].value = value
+
         else:
             super().__setattr__(name, value)
