@@ -42,9 +42,12 @@ class WebServer(aiohttp.web.Application):
         # initialize jinja2
         this_path = os.path.dirname(__file__)
         templates_path = os.path.join(this_path, 'templates')
-        self.__jinja2 = jinja2.Environment(loader=jinja2.FileSystemLoader(templates_path), enable_async=True)
+        self.__jinja2 = jinja2.Environment(loader=jinja2.FileSystemLoader(templates_path), enable_async=True,
+                                           autoescape=True)
         self.__jinja2.globals['route'] = self.route
         self.__jinja2.globals['user']  = self.user
+        self.__jinja2.globals['url']   = self.url
+        self.__jinja2.globals['str']   = str
 
         # create a socket handler
         self.__web_hndlr = self.make_handler(loop=loop)
@@ -87,7 +90,7 @@ class WebServer(aiohttp.web.Application):
         return await self.__policy.identify(request)
 
     async def route(self, name, **kwargs):
-        return self.router[name].url_for().with_query(kwargs)
+        return self.router[name].url_for(**kwargs)
 
     async def render(self, template_name, request, context=None, *args, encoding='utf-8', status=200, **kwargs):
         response = aiohttp.web.Response(status=status)
@@ -104,3 +107,9 @@ class WebServer(aiohttp.web.Application):
         response.charset = encoding
         response.text = rendered_template
         return response
+
+    async def url(self, request, tail):
+        # TODO: take base_url in account
+        if tail.startswith("/"):
+            return tail
+        return "/"+tail

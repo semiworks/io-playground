@@ -2,11 +2,17 @@
 import asyncio
 
 import app.db
+import app.device
+import app.plugin
 import app.web
+
+from .utils import *
 
 
 packages = [
     app.db,
+    app.device,
+    app.plugin,
     app.web
 ]
 

@@ -3,14 +3,14 @@
 
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ url(request, 'css/main.css') }}"/>
     </head>
 
     <body>
 
         <header>
             <nav class="nav">
-                <a href="{{ route('show_index') }}" class="nav-left"><img src="images/logo.svg" /></a>
+                <a href="{{ route('show_index') }}" class="nav-left"><img src="{{ url(request, 'images/logo.svg') }}" /></a>
                 <a href="{{ route('show_index') }}" class="nav-left">ioPlayground</a>
 
 {% if user(request) is not none %}
@@ -23,12 +23,18 @@
             </nav>
         </header>
 
+        <section id="heading">
+{% block heading %}
+{% endblock %}
+        </section>
+
         <section id="content">
 {% block content %}
 {% endblock %}
         </section>
 
-        <footer>
+        <footer id="footer">
+            ... semiworks ...
         </footer>
 
     </body>

@@ -6,12 +6,24 @@ body {
 
 a,
 a:link {
-    text-decoration: none;
+/*    text-decoration: none; */
     color: black;
+}
+
+#heading {
+    padding: 6px 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 #content {
     padding: 20px;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+#footer {
+    padding: 20px;
+    text-align: center;
 }
 
 /* navigation bar */

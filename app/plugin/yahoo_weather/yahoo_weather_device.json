@@ -1,0 +1,53 @@
+{
+    "name"       : "Yahoo Weather",
+    "description": "Fetch Yahoo Weather data",
+
+    "properties" : {
+        "location": {
+            "type"   : "string",
+            "default": "Erfurt"
+        },
+        "interval": {
+            "type": "number"
+        },
+        "temperature": {
+            "type"    : "number",
+            "readonly": true
+        },
+        "forecast": {
+            "type"    : "object",
+            "readonly": true,
+
+            "properties": {
+                "ahead_1d": {
+                    "type"    : "object",
+                    "readonly": true,
+
+                    "properties": {
+                        "temperature": {
+                            "type"    : "number",
+                            "readonly": true,
+                            "default" : 0.7
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "actions": {
+        "trigger": {
+            "description": "trigger an update.",
+            "parameters": {
+            },
+            "return": {
+            }
+        }
+    },
+
+    "events": {
+        "updated": {
+            "description": "weather data fethed from yahoo"
+        }
+    }
+}

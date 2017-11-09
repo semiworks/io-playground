@@ -12,6 +12,7 @@ class Controller(object):
             cls._instance = object.__new__(cls, *args, **kwargs)
         return cls._instance
 
+    # TODO: rename to 'protect' or 'permission' or 'privilege' ?
     @classmethod
     def require(cls, permission=None):
         # if permission is None, we need at least a logged in user
@@ -40,5 +41,5 @@ class Controller(object):
 
         return wrapper
 
-    async def render(self, template_name, request, *args, **kwargs):
-        return await request.app.render(template_name, request, *args, **kwargs)
+    async def render(self, template_name, request, context):
+        return await request.app.render(template_name, request, context=context)

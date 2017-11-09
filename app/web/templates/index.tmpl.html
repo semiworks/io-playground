@@ -1,12 +1,26 @@
 {% extends "base.tmpl.html" %}
 
-{% block content %}
+{% block heading %}
     <h1>Index</h1>
-    TODO:
+{% endblock %}
+
+{% block content %}
+
+    <h3>Devices</h3>
     <ul>
-        <li>database for runtime config</li>
+    {% for device in devices %}
+        <li>{{ device }}</li>
+    {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h3>TODO</h3>
+    <ul>
         <li>Adaptors with one/multiple Device(s)
             <ul>
+                <li>Yahoo Weather</li>
+                <li>Fritzbox</li>
                 <li>KNX</li>
                 <li>serial port</li>
                 <li>amazon echo</li>
@@ -18,5 +32,7 @@
         <li>Visu / Dashboard ?</li>
         <li>Archive</li>
         <li>HTTPS</li>
+        <li>link multiple hubs</li>
+        <li>user management</li>
     </ul>
 {% endblock %}
