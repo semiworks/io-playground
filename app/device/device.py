@@ -3,6 +3,7 @@ import json
 
 import app
 from .device_property import load_properties
+from .device_property_accessor import DevicePropertyAccessor
 
 
 class Device(object):
@@ -40,16 +41,24 @@ class Device(object):
 
     @property
     def properties(self):
-        return self.__properties
+        return DevicePropertyAccessor(self, self.__properties)
 
     def __getattr__(self, name):
-        # check if this is one of our dynamic properties
+        # # check if this is a dynamic property
         if name in self.__properties:
-            # if this is an obect, directly return it, otherwise return the value
+            # if this is an object, directly return it, otherwise return the value
             if self.__properties[name].is_object:
                 return self.__properties[name]
             return self.__properties[name].value
 
+        raise AttributeError(__class__, "object has no attribute '%s" % name)
+
+    def __setattr__(self, name, value):
+        if not name.startswith("_") and name in self.__properties:
+            self.__properties[name].value = value
+
         else:
-            # Default behaviour
-            return super(Device, self).__getattr__(name)
+            super().__setattr__(name, value)
+
+    def __str__(self):
+        return "<Device: %s>" % self.__name

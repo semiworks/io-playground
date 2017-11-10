@@ -20,7 +20,7 @@
             {% if is_object %}
                 {{ render_properties(prop_instance) }}
             {%- else %}
-            {{ value }}{% if readonly %} <sup>ro</sup>{% endif %}
+            {{ value }} {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
             {%- endif %}
         </li>
         {% endfor %}

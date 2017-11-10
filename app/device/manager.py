@@ -23,12 +23,12 @@ class DeviceManager(object):
         print(".forecast.1d-ahead.temperature:", yahoo_weather.forecast.ahead_1d.temperature)
 
         yahoo_weather.location = "Berlin"
-        yahoo_weather.forecast.ahead_1d.temperature = "42"
+        yahoo_weather.forecast.ahead_1d.temperature = 42
 
         print(".location  :", yahoo_weather.location)
         print(".forecast.1d-ahead.temperature:", yahoo_weather.forecast.ahead_1d.temperature)
 
-        # TODO: cannot access last property object -> temperature
+        # NOTE: we do not get the device, but a device property accessor here
         print(".location  :", yahoo_weather.properties.forecast.ahead_1d.temperature)
 
     async def shutdown(self):

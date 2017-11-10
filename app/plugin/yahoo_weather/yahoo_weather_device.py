@@ -9,3 +9,9 @@ class YahooWeatherDevice(app.device.Device):
         this_path = os.path.dirname(__file__)
         json_file = os.path.join(this_path, "yahoo_weather_device.json")
         super(YahooWeatherDevice, self).__init__(json_file=json_file)
+
+        self.properties.location.value_changed += self.on_location_changed
+
+    def on_location_changed(self, sender):
+        print("TODO: trigger request")
+        pass
