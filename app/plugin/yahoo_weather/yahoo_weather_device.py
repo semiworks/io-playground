@@ -2,6 +2,8 @@
 import os
 import json
 import datetime
+import time
+import asyncio
 
 import aiohttp
 
@@ -27,16 +29,47 @@ class YahooWeatherDevice(app.device.Device):
         json_file = os.path.join(this_path, "yahoo_weather_device.json")
         super(YahooWeatherDevice, self).__init__(json_file=json_file)
 
+        self._fetch_task = None
+        self._last_fetched = None
+
         self.properties.interval.value_changed += self.on_interval_changed
         self.properties.location.value_changed += self.on_location_changed
 
     async def on_location_changed(self, sender):
-        await self.__fetch_data()
+        await self.trigger_fetch()
 
     async def on_interval_changed(self, sender):
-        await self.__fetch_data()
+        await self.trigger_fetch()
 
-    async def __fetch_data(self):
+    async def trigger_fetch(self):
+        interval = self.interval
+        location = self.location
+        if interval is None or location is None:
+            # not properly configured
+            return
+
+        if self._fetch_task is not None:
+            self._fetch_task.cancel()
+
+        self._fetch_task = asyncio.ensure_future(self._fetch_task_func())
+
+    async def _fetch_task_func(self):
+        try:
+            if self._last_fetched is not None:
+                # wait some time
+                time_to_wait = max(0, self.interval - (time.time() - self._last_fetched))
+                await asyncio.sleep(time_to_wait)
+
+            await self._fetch_data()
+            self._last_fetched = time.time()
+
+            self._fetch_task=None
+            await self.trigger_fetch()
+        except asyncio.CancelledError:
+            pass
+
+    async def _fetch_data(self):
+        print("_fetch_data")
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
         yql_query = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='%s')" % self.location
         params = {
