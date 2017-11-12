@@ -1,4 +1,6 @@
 
+import asyncio
+
 
 class PropertySignal(object):
     def __init__(self, obj):
@@ -10,4 +12,4 @@ class PropertySignal(object):
 
     def emit(self):
         for slot in self.__slots:
-            slot(self.__obj)
+            asyncio.ensure_future(slot(self.__obj))

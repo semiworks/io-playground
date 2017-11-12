@@ -9,27 +9,76 @@
         },
         "interval": {
             "type":    "number",
-            "default": 60
+            "default": 300
         },
+
+        "wind": {
+            "type"      : "object",
+            "properties": {
+                "chill": {
+                    "type": "number"
+                },
+                "direction": {
+                    "type": "number"
+                },
+                "speed": {
+                    "type": "number"
+                }
+            }
+        },
+        "humidity": {
+            "type"    : "number",
+            "readonly": true
+        },
+        "visibility": {
+            "type"    : "number",
+            "readonly": true
+        },
+        "pressure": {
+            "type"    : "number",
+            "readonly": true
+        },
+
+        "sunrise": {
+            "type"    : "time",
+            "readonly": true
+        },
+        "sunset": {
+            "type"    : "time",
+            "readonly": true
+        },
+
         "temperature": {
             "type"    : "number",
             "readonly": true
         },
+        "text": {
+            "type"    : "string",
+            "readonly": true
+        },
+
         "forecast": {
-            "type"    : "object",
-            "readonly": true,
+            "type"    : "list",
+            "items": {
+                "type"    : "object",
+                "readonly": true,
 
-            "properties": {
-                "ahead_1d": {
-                    "type"    : "object",
-                    "readonly": true,
-
-                    "properties": {
-                        "temperature": {
-                            "type"    : "number",
-                            "readonly": true,
-                            "default" : 0.7
-                        }
+                "properties": {
+                    "date": {
+                        "type"    : "date",
+                        "readonly": true
+                    },
+                    "high": {
+                        "type"    : "number",
+                        "readonly": true
+                    },
+                    "low": {
+                        "type"    : "number",
+                        "readonly": true
+                    },
+                    "text": {
+                        "type"    : "string",
+                        "readonly": true
                     }
                 }
             }
@@ -48,7 +97,7 @@
 
     "events": {
         "updated": {
-            "description": "weather data fethed from yahoo"
+            "description": "weather data fetched from yahoo"
         }
     }
 }

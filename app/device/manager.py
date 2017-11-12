@@ -11,6 +11,12 @@ class DeviceManager(object):
     async def start(self):
         # TODO: read config from database and dynamically create devices
 
+        #
+        # 1) create devices with default value
+        # 2) load values from db and override default values
+        # 3) call init() on each device
+        #
+
         # create a new device instance
         from app.plugin.yahoo_weather import YahooWeatherDevice
         yahoo_weather = YahooWeatherDevice()
@@ -20,16 +26,13 @@ class DeviceManager(object):
         print("description:", yahoo_weather.description)
 
         print(".location  :", yahoo_weather.location)
-        print(".forecast.1d-ahead.temperature:", yahoo_weather.forecast.ahead_1d.temperature)
 
         yahoo_weather.location = "Berlin"
-        yahoo_weather.forecast.ahead_1d.temperature = 42
 
         print(".location  :", yahoo_weather.location)
-        print(".forecast.1d-ahead.temperature:", yahoo_weather.forecast.ahead_1d.temperature)
 
         # NOTE: we do not get the device, but a device property accessor here
-        print(".location  :", yahoo_weather.properties.forecast.ahead_1d.temperature)
+        print(".location  :", yahoo_weather.properties.location)
 
     async def shutdown(self):
         pass

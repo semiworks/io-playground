@@ -2,19 +2,24 @@
 
 class DevicePropertyAccessor(object):
 
-    def __init__(self, parent, prop_dict):
-        self.__parent    = parent
-        self.__prop_dict = prop_dict
-
-    def items(self):
-        return self.__prop_dict.items()
+    def __init__(self, parent):
+        self._parent = parent
 
     def __getattr__(self, name):
-        if name in self.__prop_dict:
-            return DevicePropertyAccessor(self.__prop_dict[name], self.__prop_dict[name].properties)
+        if "_properties" in dir(self._parent):
+            # used to proxy item() function of dictionary
+            if name in dir(self._parent._properties):
+                return getattr(self._parent._properties, name)
+
+            if name in self._parent._properties:
+                return DevicePropertyAccessor(self._parent._properties[name])
 
         # default behaviour
-        return getattr(self.__parent, name)
+        return getattr(self._parent, name)
 
     def __len__(self):
-        return len(self.__prop_dict)
+        if "_properties" in dir(self._parent):
+            return len(self._parent._properties)
+
+        # default behaviour
+        return super().__len__()

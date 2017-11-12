@@ -6,27 +6,44 @@
 {% endblock %}
 
 
-{% macro render_properties(parent) -%}
+{% macro render_item(item, name) %}
+    {% set readonly  = item.readonly %}
+    {% set type      = item.type %}
+    {% set is_object = item.is_object %}
+    {% set is_list   = item.is_list %}
+    <li>
+        <strong>{{ name }}:</strong>
+        {% if is_object %}
+            {{ type }}
+            {{ render_properties(item) }}
+        {% elif is_list %}
+            {{ type }}
+            <ul>
+                {{ render_items(item) }}
+            </ul>
+        {%- else %}
+            {% set value     = item.value %}
+            {{ value }} {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
+        {%- endif %}
+    </li>
+{%- endmacro %}
 
+
+{% macro render_items(list) %}
+    {% for item in list %}
+        {{ render_item(item, "") }}
+    {% endfor %}
+{%- endmacro %}
+
+
+{% macro render_properties(parent) -%}
     {%- if len(parent.properties) > 0 -%}
     <ul>
         {% for prop_name, prop_instance in parent.properties.items() %}
-            {% set readonly  = prop_instance.readonly %}
-            {% set value     = prop_instance.value %}
-            {% set type      = prop_instance.type %}
-            {% set is_object = prop_instance.is_object %}
-        <li>
-            <strong>{{ prop_name }}:</strong>
-            {% if is_object %}
-                {{ render_properties(prop_instance) }}
-            {%- else %}
-            {{ value }} {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
-            {%- endif %}
-        </li>
+            {{ render_item(prop_instance, prop_name) }}
         {% endfor %}
     </ul>
     {%- endif %}
-
 {%- endmacro %}
 
 
@@ -63,13 +80,16 @@
                 <li>amazon echo</li>
                 <li>ikea tadfri</li>
                 <li>THZ404</li>
+                <li>Webcam</li>
             </ul>
         </li>
+        <li>split yahoo weather in adaptor and device</li>
         <li>Logic Editor</li>
         <li>Visu / Dashboard ?</li>
         <li>Archive</li>
         <li>HTTPS</li>
         <li>link multiple hubs</li>
         <li>user management</li>
+        <li>scripts</li>
     </ul>
 {% endblock %}
