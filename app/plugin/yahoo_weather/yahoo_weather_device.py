@@ -35,6 +35,10 @@ class YahooWeatherDevice(app.device.Device):
         self.properties.interval.value_changed += self.on_interval_changed
         self.properties.location.value_changed += self.on_location_changed
 
+    async def shutdown(self):
+        if self._fetch_task is not None:
+            self._fetch_task.cancel()
+
     async def on_location_changed(self, sender):
         await self.trigger_fetch()
 
@@ -67,10 +71,12 @@ class YahooWeatherDevice(app.device.Device):
             await self.trigger_fetch()
         except asyncio.CancelledError:
             pass
+        except Exception as e:
+            pass
 
     async def _fetch_data(self):
         print("_fetch_data")
-        baseurl = "https://query.yahooapis.com/v1/public/yql?"
+        baseurl = "http://query.yahooapis.com/v1/public/yql?"
         yql_query = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='%s')" % self.location
         params = {
             'q': yql_query,
@@ -123,9 +129,10 @@ class YahooWeatherDevice(app.device.Device):
                     self.text = condition_data[TEXT]
 
                 # get forecast
+                await self.forecast.clear()
                 for i in range(10):
                     data = await self.__get_forecast(channel["item"]["forecast"][i], units)
-                    self.forecast.append({
+                    await self.forecast.append({
                         "high": data["high"],
                         "low" : data["low"],
                         "date": data["date"],

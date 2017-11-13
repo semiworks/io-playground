@@ -11,6 +11,10 @@ async def start():
     yahoo_weather = YahooWeatherPlugin()
     list_of_plugins.append(yahoo_weather)
 
+    from .webcam import WebcamPlugin
+    webcam = WebcamPlugin()
+    list_of_plugins.append(webcam)
+
 
 async def shutdown():
     global list_of_plugins

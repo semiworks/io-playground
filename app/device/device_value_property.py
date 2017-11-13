@@ -1,6 +1,8 @@
 
 import datetime
 
+from yarl import URL
+
 from .device_property import DeviceProperty
 from .property_signal import PropertySignal
 
@@ -25,6 +27,8 @@ class DeviceValueProperty(DeviceProperty):
             t = datetime.time
         elif typestr == "date":
             t = datetime.date
+        elif typestr == "url":
+            t = URL
         else:
             t = None  # is this allowed?
 

@@ -12,7 +12,10 @@ class DeviceListProperty(DeviceProperty):
         # call base class
         super().__init__(name, type=list)
 
-    def append(self, item):
+    async def clear(self):
+        self._items.clear()
+
+    async def append(self, item):
         if isinstance(item, DeviceProperty):
             # just add it to the list
             self._items.append(item)

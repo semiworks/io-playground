@@ -1,0 +1,16 @@
+{
+    "name"       : "Webcam",
+    "description": "Get access to your webcam",
+
+    "properties": {
+        "url": {
+            "type": "url"
+        }
+    },
+
+    "actions": {
+    },
+
+    "events": {
+    }
+}

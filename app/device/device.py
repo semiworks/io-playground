@@ -31,6 +31,9 @@ class Device(object):
 
                 # TODO: events, actions
 
+    async def shutdown(self):
+        pass
+
     @property
     def name(self):
         return self._name
