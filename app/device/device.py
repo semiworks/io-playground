@@ -27,7 +27,7 @@ class Device(object):
 
                 # properties
                 if key == "properties":
-                    load_properties(self._properties, value)
+                    load_properties(self, self._properties, value)
 
                 # TODO: events, actions
 
@@ -46,6 +46,10 @@ class Device(object):
     def properties(self):
         return DevicePropertyAccessor(self)
 
+    @property
+    def link(self):
+        return "/device/"+self._name.lower()
+
     def __getattr__(self, name):
         # # check if this is a dynamic property
         if name in self._properties:
@@ -54,7 +58,7 @@ class Device(object):
                 return self._properties[name]
 
             # ... otherwise return the value
-            return self._properties[name].value
+            return self._properties[name].get_value_async()
 
         raise AttributeError(__class__, "object has no attribute '%s" % name)
 

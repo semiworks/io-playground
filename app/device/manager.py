@@ -8,6 +8,13 @@ class DeviceManager(object):
         for device in self._devices:
             yield device
 
+    async def get_device_by_name(self, name):
+        for device in self._devices:
+            if device.name.lower() == name.lower():
+                return device
+
+        return None
+
     async def start(self):
         # TODO: read config from database and dynamically create devices
 
@@ -31,11 +38,11 @@ class DeviceManager(object):
         print("name       :", yahoo_weather.name)
         print("description:", yahoo_weather.description)
 
-        print(".location  :", yahoo_weather.location)
+        print(".location  :", await yahoo_weather.location)
 
         yahoo_weather.location = "Berlin"
 
-        print(".location  :", yahoo_weather.location)
+        print(".location  :", await yahoo_weather.location)
 
         # NOTE: we do not get the device, but a device property accessor here
         print(".location  :", yahoo_weather.properties.location)

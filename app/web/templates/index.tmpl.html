@@ -11,6 +11,8 @@
     {% set type      = item.type %}
     {% set is_object = item.is_object %}
     {% set is_list   = item.is_list %}
+    {% set is_url    = item.is_url %}
+    {% set is_file   = item.is_file %}
     <li>
         <strong>{{ name }}:</strong>
         {% if is_object %}
@@ -21,6 +23,12 @@
             <ul>
                 {{ render_items(item) }}
             </ul>
+        {% elif is_file %}
+            {% set link = item.link %}
+            <a href="{{ link }}">download</a> {{ type }}
+        {% elif is_url %}
+            {% set value     = item.value %}
+            <a href="{{ value }}">{{ value }}</a> {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
         {%- else %}
             {% set value     = item.value %}
             {{ value }} {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}

@@ -31,6 +31,8 @@ class WebServer(aiohttp.web.Application):
         router.add_post('/login',     app.web.LoginController().login,          name='user.login')
         router.add_get ('/logout',    app.web.LoginController().logout,         name='user.logout')
 
+        router.add_get ('/device/{device_name}/{device_property}', app.web.MainController().device_property)
+
         # initialize sessions
         storage = aiohttp_session.SimpleCookieStorage()
         aiohttp_session.setup(self, storage)

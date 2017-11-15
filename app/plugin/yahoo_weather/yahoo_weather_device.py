@@ -46,8 +46,8 @@ class YahooWeatherDevice(app.device.Device):
         await self.trigger_fetch()
 
     async def trigger_fetch(self):
-        interval = self.interval
-        location = self.location
+        interval = await self.interval
+        location = await self.location
         if interval is None or location is None:
             # not properly configured
             return
@@ -61,7 +61,7 @@ class YahooWeatherDevice(app.device.Device):
         try:
             if self._last_fetched is not None:
                 # wait some time
-                time_to_wait = max(0, self.interval - (time.time() - self._last_fetched))
+                time_to_wait = max(0, await self.interval - (time.time() - self._last_fetched))
                 await asyncio.sleep(time_to_wait)
 
             await self._fetch_data()
@@ -77,7 +77,7 @@ class YahooWeatherDevice(app.device.Device):
     async def _fetch_data(self):
         print("_fetch_data")
         baseurl = "http://query.yahooapis.com/v1/public/yql?"
-        yql_query = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='%s')" % self.location
+        yql_query = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='%s')" % await self.location
         params = {
             'q': yql_query,
             'format': 'json'
