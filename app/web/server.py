@@ -6,6 +6,7 @@ import aiohttp
 import jinja2
 import aiohttp_session
 import aiohttp_security
+import aiohttp_json_rpc
 
 import app.web
 
@@ -21,7 +22,6 @@ class WebServer(aiohttp.web.Application):
 
         # setup sessions
         router = self.router
-
         public_folder = os.path.join(os.path.dirname(__file__), "public")
         router.add_static('/css',    os.path.join(public_folder, "css"))
         router.add_static('/images', os.path.join(public_folder, "images"))
@@ -31,6 +31,7 @@ class WebServer(aiohttp.web.Application):
         router.add_post('/login',     app.web.LoginController().login,          name='user.login')
         router.add_get ('/logout',    app.web.LoginController().logout,         name='user.logout')
 
+        router.add_route('*', '/api', app.web.ApiController())
         router.add_get ('/device/{device_name}/{device_property}', app.web.MainController().device_property)
 
         # initialize sessions

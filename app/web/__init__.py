@@ -2,6 +2,7 @@
 from .server import WebServer
 from .authorization_policy import AuthorizationPolicy
 from .controllers import *
+from .json_rpc import JsonRpc
 
 # the server instance
 srvr = None
