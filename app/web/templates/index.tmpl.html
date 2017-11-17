@@ -55,6 +55,19 @@
 {%- endmacro %}
 
 
+{% macro render_events(device) -%}
+    {%- if len(device.events) > 0 -%}
+    <ul>
+        {% for ev_name, ev_instance in device.events.items() %}
+        <li>{{ ev_name }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    -none-
+    {%- endif %}
+{%- endmacro%}
+
+
 {% block content %}
 
     <h3>Devices</h3>
@@ -69,6 +82,9 @@
                 <li><strong>Description:</strong> {{ description }}</li>
                 <li><strong>Properties</strong>
                     {{ render_properties(device) }}
+                </li>
+                <li><strong>Events</strong>
+                    {{ render_events(device) }}
                 </li>
             </ul>
         </li>

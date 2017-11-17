@@ -52,6 +52,10 @@ class Device(object):
         return self._description
 
     @property
+    def events(self):
+        return self._events
+
+    @property
     def properties(self):
         return DevicePropertyAccessor(self)
 
