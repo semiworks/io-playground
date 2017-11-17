@@ -4,6 +4,7 @@ import json
 import app
 from .utils import load_properties
 from .device_property_accessor import DevicePropertyAccessor
+from .property_signal import PropertySignal
 
 
 class Device(object):
@@ -12,6 +13,7 @@ class Device(object):
         self._name        = ""
         self._description = ""
         self._properties  = app.dotdict()
+        self._events      = app.dotdict()
 
         with open(json_file) as fp:
             data = json.load(fp)
@@ -29,10 +31,17 @@ class Device(object):
                 if key == "properties":
                     load_properties(self, self._properties, value)
 
+                # events
+                if key == "events":
+                    self._load_events(value)
                 # TODO: events, actions
 
     async def shutdown(self):
         pass
+
+    def _load_events(self, definition):
+        for event_name, event_definition in definition.items():
+            self._events[event_name] = PropertySignal(self)
 
     @property
     def name(self):
@@ -51,6 +60,10 @@ class Device(object):
         return "/device/"+self._name.lower()
 
     def __getattr__(self, name):
+        # check if this is a dynamic event
+        if name in self._events:
+            return self._events[name]
+
         # # check if this is a dynamic property
         if name in self._properties:
             # if this is an object, directly return it ...
@@ -63,8 +76,14 @@ class Device(object):
         raise AttributeError(__class__, "object has no attribute '%s" % name)
 
     def __setattr__(self, name, value):
-        if not name.startswith("_") and name in self._properties:
+        if name.startswith("_"):
+            super().__setattr__(name, value)
+
+        elif name in self._properties:
             self._properties[name].value = value
+
+        elif name in self._events:
+            self._events[name] = value
 
         else:
             super().__setattr__(name, value)

@@ -96,7 +96,7 @@
     },
 
     "events": {
-        "updated": {
+        "data_fetched": {
             "description": "weather data fetched from yahoo"
         }
     }

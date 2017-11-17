@@ -35,6 +35,8 @@ class DeviceManager(object):
         yahoo_weather = YahooWeatherDevice()
         self._devices.append(yahoo_weather)
 
+        yahoo_weather.data_fetched += self.weather_update
+
         print("name       :", yahoo_weather.name)
         print("description:", yahoo_weather.description)
 
@@ -50,3 +52,6 @@ class DeviceManager(object):
     async def shutdown(self):
         for device in self._devices:
             await device.shutdown()
+
+    async def weather_update(self, sender):
+        print("weather_updated")

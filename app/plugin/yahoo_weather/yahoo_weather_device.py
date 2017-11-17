@@ -69,6 +69,9 @@ class YahooWeatherDevice(app.device.Device):
 
             self._fetch_task=None
             await self.trigger_fetch()
+
+            self.data_fetched.emit()
+
         except asyncio.CancelledError:
             pass
         except Exception as e:
