@@ -41,5 +41,5 @@ class Controller(object):
 
         return wrapper
 
-    async def render(self, template_name, request, context):
+    async def render(self, template_name, request, context={}):
         return await request.app.render(template_name, request, context=context)

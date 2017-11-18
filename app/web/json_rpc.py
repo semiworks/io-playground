@@ -4,8 +4,13 @@ import json
 import aiohttp
 import aiohttp_json_rpc
 
+from .json_rpc_auth import JsonRpcAuthBackend
+
 
 class JsonRpc(aiohttp_json_rpc.JsonRpc):
+
+    def __init__(self):
+        super().__init__(auth_backend=JsonRpcAuthBackend())
 
     async def __call__(self, request):
         # call base class
@@ -24,8 +29,7 @@ class JsonRpc(aiohttp_json_rpc.JsonRpc):
                 try:
                     msg = aiohttp_json_rpc.protocol.decode_msg(json_data)
                 except aiohttp_json_rpc.exceptions.RpcError as error:
-                    # TODO:
-                    pass
+                    return aiohttp.web.Response(text=aiohttp_json_rpc.protocol.encode_error(error))
 
                 # handle requests
                 if msg.type == aiohttp_json_rpc.protocol.JsonRpcMsgTyp.REQUEST:

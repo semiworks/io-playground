@@ -3,6 +3,7 @@ class DeviceManager(object):
 
     def __init__(self):
         self._devices = []
+        self._last_device_id = 0
 
     async def get_devices(self):
         for device in self._devices:
@@ -15,6 +16,12 @@ class DeviceManager(object):
 
         return None
 
+    async def create_device(self, device_type):
+        self._last_device_id += 1
+        instance = device_type(self._last_device_id)
+        self._devices.append(instance)
+        return instance
+
     async def start(self):
         # TODO: read config from database and dynamically create devices
 
@@ -25,15 +32,13 @@ class DeviceManager(object):
         #
 
         from app.plugin.webcam import WebcamDevice
-        webcam = WebcamDevice()
-        self._devices.append(webcam)
+        webcam = await self.create_device(WebcamDevice)
 
         webcam.url = "http://www.erfurt.de/webcam/domplatz.jpg"
 
         # create a new device instance
         from app.plugin.yahoo_weather import YahooWeatherDevice
-        yahoo_weather = YahooWeatherDevice()
-        self._devices.append(yahoo_weather)
+        yahoo_weather = await self.create_device(YahooWeatherDevice)
 
         yahoo_weather.data_fetched += self.weather_update
 

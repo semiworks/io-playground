@@ -24,10 +24,10 @@ TEXT           = "text"
 
 class YahooWeatherDevice(app.device.Device):
 
-    def __init__(self):
+    def __init__(self, device_id):
         this_path = os.path.dirname(__file__)
         json_file = os.path.join(this_path, "yahoo_weather_device.json")
-        super(YahooWeatherDevice, self).__init__(json_file=json_file)
+        super().__init__(device_id, json_file=json_file)
 
         self._fetch_task = None
         self._last_fetched = None

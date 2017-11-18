@@ -9,7 +9,8 @@ from .property_signal import PropertySignal
 
 class Device(object):
 
-    def __init__(self, json_file):
+    def __init__(self, device_id, json_file):
+        self._id          = device_id
         self._name        = ""
         self._description = ""
         self._properties  = app.dotdict()
@@ -42,6 +43,10 @@ class Device(object):
     def _load_events(self, definition):
         for event_name, event_definition in definition.items():
             self._events[event_name] = PropertySignal(self)
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def name(self):

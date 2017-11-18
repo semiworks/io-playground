@@ -9,10 +9,10 @@ import app.device
 
 class WebcamDevice(app.device.Device):
 
-    def __init__(self):
+    def __init__(self, device_id):
         this_path = os.path.dirname(__file__)
         json_file = os.path.join(this_path, "webcam_device.json")
-        super(WebcamDevice, self).__init__(json_file=json_file)
+        super().__init__(device_id, json_file=json_file)
 
         self.properties.snapshot.set_get_callback(self._get_snapshot)
 

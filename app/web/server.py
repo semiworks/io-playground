@@ -25,7 +25,9 @@ class WebServer(aiohttp.web.Application):
         public_folder = os.path.join(os.path.dirname(__file__), "public")
         router.add_static('/css',    os.path.join(public_folder, "css"))
         router.add_static('/images', os.path.join(public_folder, "images"))
+        router.add_static('/js',     os.path.join(public_folder, "js"))
 
+        router.add_get ('/new',       app.web.MainController().show_new_index)
         router.add_get ('/',          app.web.MainController().show_index,      name='show_index')
         router.add_get ('/login',     app.web.LoginController().show_login,     name='user.show_login')
         router.add_post('/login',     app.web.LoginController().login,          name='user.login')

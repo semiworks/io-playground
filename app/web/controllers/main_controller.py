@@ -10,6 +10,9 @@ from .controller import Controller
 
 class MainController(Controller):
 
+    async def show_new_index(self, request):
+        return await self.render('index_new.tmpl.html', request)
+
     @Controller.require()
     async def show_index(self, request):
 
