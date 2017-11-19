@@ -10,6 +10,12 @@ a:link {
     color: black;
 }
 
+#main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 #heading {
     padding: 6px 20px;
     border-bottom: 1px solid #ccc;
@@ -19,6 +25,7 @@ a:link {
     padding: 20px;
     background: #fff;
     border-bottom: 1px solid #ccc;
+    flex: 1;
 }
 
 #footer {
@@ -61,10 +68,11 @@ a:link {
 .panel {
     padding: 16px;
     background: #fff;
-    max-width: 600px;
+    max-width: 560px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 70px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     border: #ccc solid 1px;
 }
 
@@ -74,7 +82,7 @@ a:link {
 }
 
 img.avatar {
-    width: 40%;
+    width: 30%;
     border-radius: 50%;
 }
 

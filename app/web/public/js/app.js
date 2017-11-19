@@ -1,4 +1,6 @@
 
+// TODO: vuex for global storage, async components for lazy loading of pages
+
 // immediately-invoked function expression (IIFE)
 (function ()
 {
@@ -35,9 +37,53 @@
         }
     })
 
-    let page_login_component = Vue.component('page-login', {
+    let page_login_component = Vue.component('page-login',
+    {
+        data()
+        {
+            return {
+                username: '',
+                password: ''
+            }
+        },
+        methods:
+        {
+            async login()
+            {
+                console.log("TODO: login with " + this.username + ":" + this.password)
+                try {
+                    await userStore.login(this.email, this.password)
+                    this.failed = false
+                    // Reset the password so that the next login will have this field empty.
+                    this.password = ''
+                    this.$emit('loggedin')
+                }
+                catch (err)
+                {
+                    this.failed = true
+                }
+            }
+        },
         template: `
-            <div>Login</div>
+            <div class="panel">
+                <h2>Login Form</h2>
+
+                <form @submit.prevent="login">
+                    <div class="imgcontainer">
+                        <img src="/images/avatar.png" alt="Avatar" class="avatar">
+                    </div>
+
+                    <div class="container">
+                        <label><b>Username</b></label>
+                        <input v-model="username" type="text" placeholder="Enter Username" name="username">
+
+                        <label><b>Password</b></label>
+                        <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
+
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+            </div>
         `
     })
 
