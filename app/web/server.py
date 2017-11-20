@@ -6,7 +6,6 @@ import aiohttp
 import jinja2
 import aiohttp_session
 import aiohttp_security
-import aiohttp_json_rpc
 
 import app.web
 

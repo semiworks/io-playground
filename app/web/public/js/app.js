@@ -1,12 +1,22 @@
 
 // TODO: vuex for global storage, async components for lazy loading of pages
 
+let vue
+
 // immediately-invoked function expression (IIFE)
 (function ()
 {
-    async function rpcFetch(vue)
+    async function rpcFetch(method, params)
     {
-        response = await fetch('/api?method=device_get_list&jsonrpc=2.0&id=12')
+        if (typeof params === 'undefined')
+        {
+            response = await fetch('/api?method=' + method + '&jsonrpc=2.0&id=12')
+        }
+        else
+        {
+            response = await fetch('/api?method=' + method + '&jsonrpc=2.0&id=12&params='+JSON.stringify(params))
+        }
+
         if (response.status === 405)
         {
             // not allowed (not logged in?)
@@ -24,10 +34,9 @@
         `,
         created() {
             console.log("start page created")
-            rpcFetch(this)
+            rpcFetch('device_get_list')
                 .then(result =>
                 {
-                    console.log(result)
                     device_list = result
                 })
                 .catch(reason =>
@@ -52,15 +61,11 @@
             {
                 console.log("TODO: login with " + this.username + ":" + this.password)
                 try {
-                    await userStore.login(this.email, this.password)
-                    this.failed = false
-                    // Reset the password so that the next login will have this field empty.
-                    this.password = ''
-                    this.$emit('loggedin')
+                    rpcFetch('login', {'username': this.username, 'password': this.password})
                 }
                 catch (err)
                 {
-                    this.failed = true
+                    console.log("login() failed")
                 }
             }
         },
@@ -118,7 +123,7 @@
         ]
     })
 
-    let app = new Vue(
+    vue = new Vue(
     {
         el: '#main',
         router: router,

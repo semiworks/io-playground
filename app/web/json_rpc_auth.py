@@ -1,4 +1,6 @@
 
+import json
+
 import aiohttp_json_rpc.auth
 
 
@@ -43,7 +45,17 @@ class JsonRpcAuthBackend(aiohttp_json_rpc.auth.AuthBackend):
         request.subscriptions = request.topics & request.subscriptions
 
     async def login(self, request):
-        pass
+        params = json.loads(request.params)
+        username = params['username']
+        password = params['password']
+
+        verified = username == "bud" and password == "spencer"
+        if verified:
+            from aiohttp_session import get_session
+            session = await get_session(request.http_request)
+            session['AIOHTTP_SECURITY'] = username
+
+        return dict()
 
     async def logout(self, request):
         pass
