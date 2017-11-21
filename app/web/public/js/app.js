@@ -8,15 +8,15 @@ let vue
 {
     async function rpcFetch(method, params)
     {
-        if (typeof params === 'undefined')
+        url = '/api?method=' + method + '&jsonrpc=2.0&id=12'
+        if (typeof params !== 'undefined')
         {
-            response = await fetch('/api?method=' + method + '&jsonrpc=2.0&id=12')
-        }
-        else
-        {
-            response = await fetch('/api?method=' + method + '&jsonrpc=2.0&id=12&params='+JSON.stringify(params))
+            url = url + '&params=' + JSON.stringify(params)
         }
 
+        console.log("fetch "+url)
+        response = await fetch(url, { credentials: "same-origin" })
+        console.log(response)
         if (response.status === 405)
         {
             // not allowed (not logged in?)
@@ -25,6 +25,10 @@ let vue
         }
 
         json = await response.json()
+        console.log(json)
+
+        // NOTE json may contain 'result' if everything is ok or 'error' if an error occurred
+
         return json.result
     }
 
@@ -51,17 +55,30 @@ let vue
         data()
         {
             return {
-                username: '',
-                password: ''
+                uname: '',
+                passwd: ''
+            }
+        },
+        computed:
+        {
+            username()
+            {
+                return store.state.username
             }
         },
         methods:
         {
             async login()
             {
-                console.log("TODO: login with " + this.username + ":" + this.password)
+                console.log("TODO: login with " + this.uname + ":" + this.passwd)
                 try {
-                    rpcFetch('login', {'username': this.username, 'password': this.password})
+                    result = await rpcFetch('login', {'username': this.uname, 'password': this.passwd})
+
+                    console.log("logged in")
+                    store.commit('user_login')
+                    username = result.username
+                    // navigate to start page
+                    vue.$router.push({name: 'index'})
                 }
                 catch (err)
                 {
@@ -80,10 +97,10 @@ let vue
 
                     <div class="container">
                         <label><b>Username</b></label>
-                        <input v-model="username" type="text" placeholder="Enter Username" name="username">
+                        <input v-model="uname" type="text" placeholder="Enter Username" name="username">
 
                         <label><b>Password</b></label>
-                        <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
+                        <input v-model="passwd" type="password" placeholder="Enter Password" name="password" required>
 
                         <button type="submit">Login</button>
                     </div>
@@ -93,15 +110,46 @@ let vue
     })
 
     Vue.component('app-nav', {
+        methods:
+        {
+            async logout()
+            {
+                try {
+                    await rpcFetch('logout')
+
+                    console.log("logged out")
+                    store.commit('user_logout')
+                    username = ""
+                    // navigate to start page
+                    vue.$router.push({name: 'login'})
+
+                }
+                catch (err)
+                {
+                    console.log("logout() failed")
+                }
+            }
+        },
+        computed:
+        {
+            logged_in()
+            {
+                return store.state.logged_in
+            },
+            username()
+            {
+                return store.state.username
+            }
+        },
         template: `
             <header>
                 <nav class="nav">
                     <router-link :to="{ name: 'index' }" class="nav-left"><img src="/images/logo.svg" /></router-link>
                     <router-link :to="{ name: 'index' }" class="nav-left">ioPlayground</router-link>
 
-                    <a href="#" class="nav-right">Abmelden</a>
-                    <span class="nav-right">Hi ...</span>
-                    <router-link :to="{ name: 'login' }" class="nav-right">Anmelden</router-link>
+                    <a href="#"  v-if="logged_in" @click.self.prevent="logout" class="nav-right">Abmelden</a>
+                    <router-link v-else           :to="{ name: 'login' }"      class="nav-right">Anmelden</router-link>
+                    <span v-if="logged_in" class="nav-right">Hi {{ username }}</span>
                 </nav>
             </header>
         `
@@ -116,14 +164,28 @@ let vue
         `
     })
 
-    let router = new VueRouter({
+    let router = new VueRouter(
+    {
         routes: [
             { path: '/',      name: "index", component: page_index_component },
             { path: '/login', name: "login", component: page_login_component }
         ]
     })
 
-    vue = new Vue(
+    const store = new Vuex.Store(
+    {
+        state:
+        {
+            logged_in: __INITIAL_STATE__.logged_in,
+            username:  __INITIAL_STATE__.username
+        },
+        mutations: {
+            user_login : state => state.logged_in = true,
+            user_logout: state => state.logged_in = false
+        }
+    })
+
+    const vue = new Vue(
     {
         el: '#main',
         router: router,
