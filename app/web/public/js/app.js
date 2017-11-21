@@ -34,7 +34,35 @@ let vue
 
     let page_index_component = Vue.component('page-index', {
         template: `
-            <div>Startseite</div>
+            <div>
+                content
+
+                <hr>
+
+                <h3>TODO</h3>
+                <ul>
+                    <li>Adaptors with one/multiple Device(s)
+                        <ul>
+                            <li><strike>Yahoo Weather</strike></li>
+                            <li>Fritzbox</li>
+                            <li>KNX</li>
+                            <li>serial port</li>
+                            <li>amazon echo</li>
+                            <li>ikea tadfri</li>
+                            <li>THZ404</li>
+                            <li><strike>Webcam</strike></li>
+                        </ul>
+                    </li>
+                    <li>split yahoo weather in adaptor and device</li>
+                    <li>Logic Editor</li>
+                    <li>Visu / Dashboard ?</li>
+                    <li>Archive</li>
+                    <li>HTTPS</li>
+                    <li>link multiple hubs</li>
+                    <li>user management</li>
+                    <li>scripts</li>
+                </ul>
+            </div>
         `,
         created() {
             console.log("start page created")
@@ -191,63 +219,6 @@ let vue
         router: router,
 
         data: {
-            todo_list: [
-                {
-                    "text": "Adaptors with one/multiple Device(s)",
-                    "items": [
-                        {
-                            "text": "Yahoo Weather",
-                            "done": true
-                        },
-                        {
-                            "text": "Fritzbox"
-                        },
-                        {
-                            "text": "KNX"
-                        },
-                        {
-                            "text": "serial port"
-                        },
-                        {
-                            "text": "amazon echo"
-                        },
-                        {
-                            "text": "ikea tadfri"
-                        },
-                        {
-                            "text": "THZ404"
-                        },
-                        {
-                            "text": "Webcam",
-                            "done": true
-                        }
-                    ]
-                },
-                {
-                    "text": "split yahoo weather in adaptor and device"
-                },
-                {
-                    "text": "Logic Editor"
-                },
-                {
-                    "text": "Visu / Dashboard ?"
-                },
-                {
-                    "text": "Archive"
-                },
-                {
-                    "text": "HTTPS"
-                },
-                {
-                    "text": "link multiple hubs"
-                },
-                {
-                    "text": "user management"
-                },
-                {
-                    "text": "scripts"
-                }
-            ],
             device_list: [],
             footer_text: "... semiworks ..."
         },
