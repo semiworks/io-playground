@@ -32,7 +32,7 @@ class ApiController(object):
         # forward to our json rpc handler
         return await self.__rpc.__call__(request)
 
-    #@login_required
+    @login_required
     async def device_get_list(self, request):
         device_list = app.device.manager.get_devices()
         result = []

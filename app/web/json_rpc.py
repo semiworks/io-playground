@@ -2,6 +2,7 @@
 import json
 
 import aiohttp
+import aiohttp_session
 import aiohttp_json_rpc
 
 from .json_rpc_auth import JsonRpcAuthBackend
@@ -13,6 +14,10 @@ class JsonRpc(aiohttp_json_rpc.JsonRpc):
         super().__init__(auth_backend=JsonRpcAuthBackend())
 
     async def __call__(self, request):
+        # get identy from cookie
+        session = await aiohttp_session.get_session(request)
+        request.user = session.get('AIOHTTP_SECURITY') # TODO: session ID
+
         # call base class
         result = await super().__call__(request)
         if type(result) == aiohttp.web.Response and result.status == 405:
