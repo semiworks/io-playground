@@ -33,6 +33,7 @@ class WebServer(aiohttp.web.Application):
         router.add_get ('/logout',    app.web.LoginController().logout,         name='user.logout')
 
         router.add_route('*', '/api', app.web.ApiController())
+        # TODO: move to api?
         router.add_get ('/device/{device_name}/{device_property}', app.web.MainController().device_property)
 
         # initialize sessions

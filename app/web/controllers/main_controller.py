@@ -26,6 +26,14 @@ class MainController(Controller):
         device_name     = request.match_info.get('device_name')
         device_property = request.match_info.get('device_property')
 
+        # TODO: return json data here
+        # {
+        #   "name" : ....
+        #   "type" : ....
+        #   "value": ....
+        #   "some type specific meta data": ....
+        #
+
         # get device by name
         device = await app.device.manager.get_device_by_name(device_name)
         if device is None:

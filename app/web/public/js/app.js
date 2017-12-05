@@ -32,10 +32,30 @@ let vue
         return json.result
     }
 
+    let app_device = Vue.component('device-info', {
+        props: ['device_info'],
+        created() {
+            // TODO: get description from remote
+            console.log(this.device_info.id)
+        },
+        template: `
+            <div>
+                [{{ device_info.id }}] {{ device_info.type }}
+                <ul>
+                    <li><strong>Name:</strong> aaa</li>
+                </ul>
+            </div>
+        `
+    })
+
     let page_index_component = Vue.component('page-index', {
         template: `
             <div>
-                content
+                <ul>
+                    <li v-for="device in $store.state.device_list">
+                        <device-info :device_info="device"></device-info>
+                    </li>
+                </ul>
 
                 <hr>
 
@@ -65,16 +85,18 @@ let vue
             </div>
         `,
         created() {
-            console.log("start page created")
-            rpcFetch('device_get_list')
-                .then(result =>
+            (async (vue) =>
+            {
+                try
                 {
-                    device_list = result
-                })
-                .catch(reason =>
+                    device_list = await rpcFetch('device_get_list')
+                    vue.$store.state.device_list = device_list
+                }
+                catch (err)
                 {
-                    //console.error(reason)
-                });
+                    console.log("login() failed")
+                }
+            })(this);
         }
     })
 
@@ -205,7 +227,9 @@ let vue
         state:
         {
             logged_in: __INITIAL_STATE__.logged_in,
-            username:  __INITIAL_STATE__.username
+            username :  __INITIAL_STATE__.username,
+
+            device_list: []
         },
         mutations: {
             user_login : state => state.logged_in = true,
@@ -217,26 +241,10 @@ let vue
     {
         el: '#main',
         router: router,
+        store: store,
 
         data: {
-            device_list: [],
             footer_text: "... semiworks ..."
-        },
-
-        // is called right after start
-        created()
-        {/*
-            (async (vue) =>
-            {
-                const response = await fetch('/api?method=device_get_list&jsonrpc=2.0&id=12');
-                if (response.status == 405)
-                {
-                    // not logged in
-                    console.log("not logged in")
-                }
-                json = await response.json()
-                vue.device_list = json.result
-            })(this);*/
         }
     });
 })();

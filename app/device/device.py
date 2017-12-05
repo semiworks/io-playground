@@ -89,7 +89,7 @@ class Device(object):
             super().__setattr__(name, value)
 
         elif name in self._properties:
-            self._properties[name].value = value
+            self._properties[name].set_value(value)
 
         elif name in self._events:
             self._events[name] = value

@@ -39,7 +39,8 @@ class ApiController(object):
         async for device in device_list:
             result.append({
                 "id"  : device.id,
-                "name": device.name
+                "name": device.name,
+                "type": str(device.__class__)
             })
         return result
 

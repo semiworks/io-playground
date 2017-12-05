@@ -40,6 +40,12 @@ class DeviceManager(object):
         from app.plugin.yahoo_weather import YahooWeatherDevice
         yahoo_weather = await self.create_device(YahooWeatherDevice)
 
+        from app.plugin.fritzbox import FritzboxDevice
+        fritzbox = await self.create_device(FritzboxDevice)
+
+        print("name       :", fritzbox.name)
+        print(".model     :", await fritzbox.model)
+
         yahoo_weather.data_fetched += self.weather_update
 
         print("name       :", yahoo_weather.name)

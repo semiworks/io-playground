@@ -16,6 +16,8 @@ class DeviceProperty(object):
         self._type = type
         self._readonly = readonly
 
+        self._get_callback = None
+
     @property
     def readonly(self):
         return self._readonly
@@ -51,6 +53,15 @@ class DeviceProperty(object):
     @parent.setter
     def parent(self, value):
         self._parent = value
+
+    def set_get_callback(self, cb):
+        self._get_callback = cb
+
+    def _async_value(self):
+        return self._get_callback()
+
+    def get_value_async(self):
+        return self._async_value()
 
     def __str__(self):
         return "<DeviceProperty: %s>" % self._name

@@ -1,0 +1,17 @@
+{
+    "name"       : "Fritzbox",
+    "description": "Get access to your Fritzbox",
+
+    "properties": {
+        "model": {
+            "type"    : "string",
+            "readonly": true
+        }
+    },
+
+    "actions": {
+    },
+
+    "events": {
+    }
+}

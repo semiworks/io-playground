@@ -43,20 +43,21 @@ class DeviceValueProperty(DeviceProperty):
     def value_changed(self):
         return self._value_changed
 
-    @property
-    def value(self):
-        return self._value
+    def set_value(self, value):
+        self._value = value
 
-    @value.setter
-    def value(self, value):
-        if self._value != value:
-            self._value = value
-            self._value_changed.emit()
-        else:
-            self._value = value
+    async def _set_value_async(self, value):
+        return
 
-    async def _async_value(self):
+    def set_value_async(self, value):
+        return self._set_value_async(value)
+
+    async def _get_async_value(self):
+        # check if we have a value callback
+        if self._get_callback is not None:
+            return await self._get_callback()
+
         return self._value
 
     def get_value_async(self):
-        return self._async_value()
+        return self._get_async_value()
