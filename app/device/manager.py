@@ -16,6 +16,13 @@ class DeviceManager(object):
 
         return None
 
+    async def get_device_by_id(self, device_id):
+        for device in self._devices:
+            if device.id == device_id:
+                return device
+
+        return None
+
     async def create_device(self, device_type):
         self._last_device_id += 1
         instance = device_type(self._last_device_id)

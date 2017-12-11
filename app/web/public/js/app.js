@@ -21,7 +21,7 @@ let vue
         {
             // not allowed (not logged in?)
             vue.$router.push({name: 'login'})
-            throw 42;
+            throw new Error(42);
         }
 
         json = await response.json()
@@ -33,16 +33,72 @@ let vue
     }
 
     let app_device = Vue.component('device-info', {
-        props: ['device_info'],
+        props: ['device_id'],
+        data() {
+            return {
+                list_idx: -1
+            }
+        },
+        computed: {
+            name: function() {
+                if (this.$store.state.device_list[this.list_idx])
+                {
+                    return this.$store.state.device_list[this.list_idx].name;
+                }
+                return '';
+            },
+            type: function() {
+                if (this.$store.state.device_list[this.list_idx])
+                {
+                    return this.$store.state.device_list[this.list_idx].type;
+                }
+                return '';
+            },
+            description: function() {
+                if (this.$store.state.device_list[this.list_idx])
+                {
+                    return this.$store.state.device_list[this.list_idx].description;
+                }
+                return '';
+            }
+        },
         created() {
-            // TODO: get description from remote
-            console.log(this.device_info.id)
+            (async () => {
+                try {
+                    let result = await rpcFetch('device_get_info', { id: this.device_id })
+
+                    // find list entry of this device
+                    this.list_idx = -1;
+                    for (let i = 0; i < this.$store.state.device_list.length; i++)
+                    {
+                        if (this.$store.state.device_list[i].id === this.device_id)
+                        {
+                            this.list_idx = i;
+                            break;
+                        }
+                    }
+
+                    if (this.list_idx >= 0)
+                    {
+                        // update name & description
+                        this.$store.state.device_list[this.list_idx].name        = result.name;
+                        this.$store.state.device_list[this.list_idx].description = result.description;
+                    }
+                }
+                catch (e)
+                {
+                    // TODO: remove from device list ?
+                    console.log(e)
+                }
+            })();
         },
         template: `
             <div>
-                [{{ device_info.id }}] {{ device_info.type }}
+                [{{ device_id }}] {{ type }}
                 <ul>
-                    <li><strong>Name:</strong> aaa</li>
+                    <li><strong>Name:</strong> {{ name }}</li>
+                    <li><strong>Description:</strong> {{ description }}</li>
+                    <li><strong>Properties:</strong> TODO ...</li>
                 </ul>
             </div>
         `
@@ -51,9 +107,10 @@ let vue
     let page_index_component = Vue.component('page-index', {
         template: `
             <div>
+                <h3>Devices</h3>
                 <ul>
                     <li v-for="device in $store.state.device_list">
-                        <device-info :device_info="device"></device-info>
+                        <device-info :device_id="device.id"></device-info>
                     </li>
                 </ul>
 
@@ -89,8 +146,42 @@ let vue
             {
                 try
                 {
-                    device_list = await rpcFetch('device_get_list')
-                    vue.$store.state.device_list = device_list
+                    result = await rpcFetch('device_get_list')
+
+                    for (let i = 0; i < vue.$store.state.device_list.length; i++)
+                    {
+                        // check if this is in result
+                        let found = false;
+                        for (let k = 0; k < result.length; k++)
+                        {
+                            if (result[k].id === vue.$store.state.device_list[i].id)
+                            {
+                                // found it
+                                found = true;
+
+                                // update type in device list
+                                vue.$store.state.device_list[i].type = result[k].type;
+
+                                // remove from result list
+                                result.slice(k, k+1);
+
+                                // stop here
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            // remove from store list
+                            vue.$store.state.device_list.slice(i, i+1);
+                        }
+                    }
+
+                    // now add everything that is left in result
+                    for (let i = 0; i < result.length; i++)
+                    {
+                        vue.$store.state.device_list.push({ id: result[i].id, type: result[i].type });
+                    }
                 }
                 catch (err)
                 {

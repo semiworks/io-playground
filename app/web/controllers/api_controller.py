@@ -1,4 +1,6 @@
 
+import json
+
 import app.web
 import app.device
 from aiohttp_json_rpc.auth import permission_required, user_passes_test, login_required
@@ -43,6 +45,19 @@ class ApiController(object):
                 "type": str(device.__class__)
             })
         return result
+
+    async def device_get_info(self, request):
+        params = json.loads(request.params)
+        device_id = params['id']
+        # TODO: check if device exists
+        device = await app.device.manager.get_device_by_id(device_id)
+
+        device_info = dict()
+        device_info['id']          = device.id
+        device_info['name']        = device.name
+        device_info['description'] = device.description
+
+        return device_info
 
     async def ping(self, request):
         return 'pong'
