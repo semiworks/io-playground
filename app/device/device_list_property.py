@@ -29,7 +29,7 @@ class DeviceListProperty(DeviceProperty):
             if prop_inst is not None:
                 for name, value in item.items():
                     # TODO: exec is eval
-                    exec("prop_inst.properties." + name + ".value = value")
+                    exec("prop_inst.properties." + name + ".set_value(value)")
                 self._items.append(prop_inst)
 
     def __iter__(self):
@@ -37,3 +37,10 @@ class DeviceListProperty(DeviceProperty):
 
     def __next__(self):
         return next(self._items)
+
+    async def to_json_dict(self):
+        d = await super().to_json_dict()
+        d['items'] = []
+        for item in self._items:
+            d['items'].append(await item.to_json_dict())
+        return d

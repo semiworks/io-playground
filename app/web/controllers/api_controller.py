@@ -55,7 +55,13 @@ class ApiController(object):
         device_info = dict()
         device_info['id']          = device.id
         device_info['name']        = device.name
+        device_info['type']        = str(device.__class__)
         device_info['description'] = device.description
+
+        # get properties of the device
+        device_info['properties']  = dict()
+        for prop_name, prop_instance in device.properties.items():
+            device_info['properties'][prop_name] = await prop_instance.to_json_dict()
 
         return device_info
 

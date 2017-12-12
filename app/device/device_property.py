@@ -5,6 +5,7 @@ class DeviceProperty(object):
     OBJECT_TYPE="<object>"
     URL_TYPE="<url>"
     DATE_TYPE="<date>"
+    TIME_TYPE="<time>"
     LIST_TYPE="<list>"
     NUMBER_TYPE="<number>"
     STRING_TYPE="<string>"
@@ -62,6 +63,12 @@ class DeviceProperty(object):
 
     def get_value_async(self):
         return self._async_value()
+
+    async def to_json_dict(self):
+        d = dict()
+        d['type']     = self._type
+        d['readonly'] = self._readonly
+        return d
 
     def __str__(self):
         return "<DeviceProperty: %s>" % self._name

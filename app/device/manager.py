@@ -26,6 +26,7 @@ class DeviceManager(object):
     async def create_device(self, device_type):
         self._last_device_id += 1
         instance = device_type(self._last_device_id)
+        await instance.start()
         self._devices.append(instance)
         return instance
 

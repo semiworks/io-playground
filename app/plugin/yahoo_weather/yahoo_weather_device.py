@@ -35,6 +35,9 @@ class YahooWeatherDevice(app.device.Device):
         self.properties.interval.value_changed += self.on_interval_changed
         self.properties.location.value_changed += self.on_location_changed
 
+    async def start(self):
+        await self.trigger_fetch()
+
     async def shutdown(self):
         if self._fetch_task is not None:
             self._fetch_task.cancel()

@@ -37,6 +37,9 @@ class Device(object):
                     self._load_events(value)
                 # TODO: events, actions
 
+    async def start(self):
+        pass
+
     async def shutdown(self):
         pass
 

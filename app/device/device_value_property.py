@@ -24,7 +24,7 @@ class DeviceValueProperty(DeviceProperty):
         elif typestr == "number":
             t = DeviceProperty.NUMBER_TYPE
         elif typestr == "time":
-            t = datetime.time
+            t = DeviceProperty.TIME_TYPE
         elif typestr == "date":
             t = DeviceProperty.DATE_TYPE
         elif typestr == "url":
@@ -37,7 +37,7 @@ class DeviceValueProperty(DeviceProperty):
 
         # try to get default value
         if "default" in prop_def:
-            self.value = prop_def["default"]
+            self._value = prop_def["default"]
 
     @property
     def value_changed(self):
@@ -45,12 +45,6 @@ class DeviceValueProperty(DeviceProperty):
 
     def set_value(self, value):
         self._value = value
-
-    async def _set_value_async(self, value):
-        return
-
-    def set_value_async(self, value):
-        return self._set_value_async(value)
 
     async def _get_async_value(self):
         # check if we have a value callback
@@ -61,3 +55,13 @@ class DeviceValueProperty(DeviceProperty):
 
     def get_value_async(self):
         return self._get_async_value()
+
+    async def to_json_dict(self):
+        d = await super().to_json_dict()
+        if type(self._value) is datetime.time:
+            d['value'] = self._value.isoformat(timespec='auto')
+        elif type(self._value) is datetime.date:
+            d['value'] = self._value.isoformat()
+        else:
+            d['value'] = self._value
+        return d

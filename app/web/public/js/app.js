@@ -6,6 +6,35 @@ let vue
 // immediately-invoked function expression (IIFE)
 (function ()
 {
+    async function updateObject(target, from)
+    {
+        Object.keys(from).forEach(function(key)
+        {
+            // delete property if set to undefined or null
+            if (from[key] === undefined || from[key] === null)
+            {
+                delete target[key]
+            }
+            // property value is object, so recurse
+            else if (typeof from[key] === 'object' && !Array.isArray(from[key]))
+            {
+                // target property not object, overwrite with empty object
+                if (!(typeof target[key] === 'object' && !Array.isArray(target[key])))
+                {
+                    target[key] = {}
+                }
+
+                // recurse
+                updateObject(target[key], from[key])
+            }
+            // set target property to update property
+            else
+            {
+                target[key] = from[key]
+            }
+        })
+    }
+
     async function rpcFetch(method, params)
     {
         url = '/api?method=' + method + '&jsonrpc=2.0&id=12'
@@ -31,6 +60,31 @@ let vue
 
         return json.result
     }
+
+    Vue.component('device-properties', {
+        props: ['property_list'],
+        template: `
+            <ul>
+                <li v-for="(property, index) in property_list">
+                    <strong>{{ index }}:</strong>
+                    <span v-if="['<number>', '<date>', '<time>', '<string>', '<url>'].includes(property.type)">
+                        {{ property.value || '___' }} {{ property.type }}<sup v-if="property.readonly">ro</sup>
+                    </span>
+                    <span v-else-if="property.type === '<object>'">
+                        {{ property.type }}
+                        <device-properties :property_list="property.properties"></device-properties>
+                    </span>
+                    <span v-else-if="property.type === '<list>'">
+                        {{ property.type }}
+                        <device-properties :property_list="property.items"></device-properties>
+                    </span>
+                    <span v-else>
+                        TODO {{ property.type }}
+                    </span>
+                </li>
+            </ul>
+        `
+    })
 
     let app_device = Vue.component('device-info', {
         props: ['device_id'],
@@ -60,6 +114,13 @@ let vue
                     return this.$store.state.device_list[this.list_idx].description;
                 }
                 return '';
+            },
+            properties: function() {
+                if (this.$store.state.device_list[this.list_idx])
+                {
+                    return this.$store.state.device_list[this.list_idx].properties;
+                }
+                return [];
             }
         },
         created() {
@@ -80,9 +141,8 @@ let vue
 
                     if (this.list_idx >= 0)
                     {
-                        // update name & description
-                        this.$store.state.device_list[this.list_idx].name        = result.name;
-                        this.$store.state.device_list[this.list_idx].description = result.description;
+                        // update list entry
+                        await updateObject(this.$store.state.device_list[this.list_idx], result)
                     }
                 }
                 catch (e)
@@ -98,7 +158,9 @@ let vue
                 <ul>
                     <li><strong>Name:</strong> {{ name }}</li>
                     <li><strong>Description:</strong> {{ description }}</li>
-                    <li><strong>Properties:</strong> TODO ...</li>
+                    <li><strong>Properties</strong>
+                        <device-properties :property_list="properties"></device-properties>
+                    </li>
                 </ul>
             </div>
         `

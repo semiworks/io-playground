@@ -21,6 +21,15 @@ class DeviceObjectProperty(DeviceProperty):
 
     def __setattr__(self, name, value):
         if not name.startswith("_") and name in self._properties:
-            self._properties[name].value = value
+            self._properties[name].set_value(value)
         else:
             super().__setattr__(name, value)
+
+    async def to_json_dict(self):
+        d = await super().to_json_dict()
+        d['properties'] = dict()
+
+        for key,value in self._properties.items():
+            d['properties'][key] = await value.to_json_dict()
+
+        return d
