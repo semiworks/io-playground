@@ -82,5 +82,21 @@ export default
                 target[key] = from[key]
             }
         })
+    },
+
+    getSheet: function(component)
+    {
+    	while (component.$options.name !== "Sheet")
+    	{
+    		// check parent
+    		if (typeof component.$parent === "undefined")
+    		{
+    			return null;
+    		}
+
+    		component = component.$parent;
+    	}
+
+    	return component
     }
 }

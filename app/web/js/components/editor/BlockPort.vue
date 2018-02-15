@@ -1,13 +1,20 @@
 <template>
 	<div>
 		<div>value</div>
-		<div>connector</div>
+		<block-connector :port="port" />
 	</div>
 </template>
 
 <script>
+import BlockConnector from "./BlockConnector.vue"
+
 export default
 {
-	props: ["port"]
+	props: ["port"],
+
+	components:
+	{
+		BlockConnector
+	}
 }
 </script>

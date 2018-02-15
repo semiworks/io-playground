@@ -2,13 +2,6 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="/css/app.css"/>
-
-        <script type="text/javascript">
-            window.__INITIAL_STATE__ = {
-                "logged_in": {{ "true"        if user(request) else "false" }},
-                "username":  "{{ user(request) if user(request) else "" }}"
-            }
-        </script>
     </head>
 
     <body>
