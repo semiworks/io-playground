@@ -19,24 +19,26 @@ class WebServer(aiohttp.web.Application):
         # call base class
         super(WebServer, self).__init__()
 
-        # setup sessions
+        #
+        # setup routes
+        #
         router = self.router
         public_folder = os.path.join(os.path.dirname(__file__), "public")
+
+        # set assets
         router.add_static('/css',    os.path.join(public_folder, "css"))
         router.add_static('/images', os.path.join(public_folder, "images"))
         router.add_static('/js',     os.path.join(public_folder, "js"))
 
-        router.add_get ('/new',       app.web.MainController().show_new_index)
+        # main entry route
         router.add_get ('/',          app.web.MainController().show_index,      name='show_index')
-        router.add_get ('/login',     app.web.LoginController().show_login,     name='user.show_login')
-        router.add_post('/login',     app.web.LoginController().login,          name='user.login')
-        router.add_get ('/logout',    app.web.LoginController().logout,         name='user.logout')
 
+        # REST API
         router.add_route('*', '/api', app.web.ApiController())
-        # TODO: move to api?
-        router.add_get ('/device/{device_name}/{device_property}', app.web.MainController().device_property)
 
-        # initialize sessions
+        #
+        # initialize sessions and security
+        #
         storage = aiohttp_session.SimpleCookieStorage()
         aiohttp_session.setup(self, storage)
 
@@ -44,7 +46,10 @@ class WebServer(aiohttp.web.Application):
         self.__policy = aiohttp_security.SessionIdentityPolicy()
         aiohttp_security.setup(self, self.__policy, app.web.AuthorizationPolicy())
 
-        # initialize jinja2
+        #
+        # initialize server-side rendering engine (inja2)
+        #
+        # TODO: remove jinja2 as we do not need it anymore
         this_path = os.path.dirname(__file__)
         templates_path = os.path.join(this_path, 'templates')
         self.__jinja2 = jinja2.Environment(loader=jinja2.FileSystemLoader(templates_path), enable_async=True,

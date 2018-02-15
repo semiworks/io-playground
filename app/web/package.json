@@ -1,0 +1,23 @@
+{
+    "name": "FullStackTemplate",
+    "version": "1.0.0",
+    "description": "A Template for creating a Full Stack Web Application using Python, NPM, Webpack and React",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack -p --progress --config webpack.config.js",
+        "dev-build": "webpack --progress -d --config webpack.config.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "webpack --progress -d --config webpack.config.js --watch"
+    },
+    "dependencies": {
+        "vue": "^2.5.13"
+    },
+    "author": "Sebastian Michel",
+    "license": "",
+    "devDependencies": {
+        "vue-loader": "^13.0.5",
+        "vue-router": "^2.7.0",
+        "vue-template-compiler": "^2.4.4",
+        "webpack": "^3.0.0"
+    }
+}

@@ -34,36 +34,42 @@ class ApiController(object):
         # forward to our json rpc handler
         return await self.__rpc.__call__(request)
 
-    @login_required
-    async def device_get_list(self, request):
-        device_list = app.device.manager.get_devices()
-        result = []
-        async for device in device_list:
-            result.append({
-                "id"  : device.id,
-                "name": device.name,
-                "type": str(device.__class__)
-            })
-        return result
+    async def editor_blocklist(self, request):
+        blocks = []
+        blocks.append({
+            'name': 'static value',
+            'id'  : 'static.value'
+        })
+        blocks.append({
+            'name': 'addition',
+            'id'  : 'addition'
+        })
+        blocks.append({
+            'name': 'export',
+            'id'  : 'export'
+        })
 
-    async def device_get_info(self, request):
+        return {
+            'blocks': blocks
+        }
+
+    async def editor_blockinfo(self, request):
         params = json.loads(request.params)
-        device_id = params['id']
-        # TODO: check if device exists
-        device = await app.device.manager.get_device_by_id(device_id)
+        block_id = params['id']
+        if block_id == 'static.value':
+            return {
+                'id'      : 'static.value',
+                'name'    : 'static value',
+                'template': 'simple',
+                'ports'   : [
+                    {
+                        'id'     : 'output',
+                        'name'   : 'Wert',
+                        'type'   : 'out'
+                    }
+                ]
+            }
 
-        device_info = dict()
-        device_info['id']          = device.id
-        device_info['name']        = device.name
-        device_info['type']        = str(device.__class__)
-        device_info['description'] = device.description
-
-        # get properties of the device
-        device_info['properties']  = dict()
-        for prop_name, prop_instance in device.properties.items():
-            device_info['properties'][prop_name] = await prop_instance.to_json_dict()
-
-        return device_info
-
-    async def ping(self, request):
-        return 'pong'
+        # TODO: produce HTML 500 error
+        return {
+        }

@@ -39,10 +39,17 @@ class JsonRpc(aiohttp_json_rpc.JsonRpc):
                 # handle requests
                 if msg.type == aiohttp_json_rpc.protocol.JsonRpcMsgTyp.REQUEST:
 
+                    # in python we declare a method with underscore 'this_is_a_message()', but in javascript we call it
+                    # with a dit 'call.this.method'
+                    method_name = msg.data['method'].replace('.', '_');
+
                     # check if method is available
-                    if msg.data['method'] not in request.methods:
+                    if method_name not in request.methods:
                         # method is unknown or restricted
-                        return aiohttp.web.Response(status=405)
+                        if method_name in self.methods:
+                            # the method does exist, but the user has no privileges to access it
+                            return aiohttp.web.Response(status=403) # FORBIDDEN
+                        return aiohttp.web.Response(status=404) # NOT FOUND
 
                     # call method
                     try:
@@ -52,7 +59,7 @@ class JsonRpc(aiohttp_json_rpc.JsonRpc):
                             msg=msg,
                         )
 
-                        result = await request.methods[msg.data['method']](json_rpc_request)
+                        result = await request.methods[method_name](json_rpc_request)
                         return aiohttp.web.Response(text=aiohttp_json_rpc.protocol.encode_result(msg.data['id'], result))
 
                     except (aiohttp_json_rpc.RpcInvalidParamsError, aiohttp_json_rpc.RpcInvalidRequestError) as error:

@@ -10,19 +10,12 @@ from .controller import Controller
 
 class MainController(Controller):
 
-    async def show_new_index(self, request):
-        return await self.render('index_new.tmpl.html', request)
-
-    @Controller.require()
     async def show_index(self, request):
-
-        devices = app.device.manager.get_devices()
-
-        return await self.render('index.tmpl.html', request, {
-            'devices': devices
-        })
+        return await self.render('index.tmpl.html', request)
 
     async def device_property(self, request):
+        # TODO: remove this function
+
         device_name     = request.match_info.get('device_name')
         device_property = request.match_info.get('device_property')
 

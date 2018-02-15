@@ -10,9 +10,21 @@ from .utils import *
 
 
 packages = [
+    #
+    # setup database connection
+    #
     app.db,
-    app.device,
-    app.plugin,
+
+    #
+    #
+    #
+
+#    app.device,
+#    app.plugin,
+
+    #
+    # start internal webserver
+    #
     app.web
 ]
 

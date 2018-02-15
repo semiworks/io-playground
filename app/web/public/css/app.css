@@ -1,0 +1,18 @@
+
+.editor-sheet {
+	border: 1px solid lightgrey;
+	width: 600px;
+	height: 500px;
+	position: relative;
+}
+
+.editor-blocklist {
+	border: 1px solid lightgrey;
+	width: 300px;
+	height: 300px;
+}
+
+.editor-blockcontainer {
+	position: absolute;
+	user-select: none;
+}

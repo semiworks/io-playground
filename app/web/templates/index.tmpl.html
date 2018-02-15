@@ -1,119 +1,18 @@
-{% extends "base.tmpl.html" %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/css/app.css"/>
 
+        <script type="text/javascript">
+            window.__INITIAL_STATE__ = {
+                "logged_in": {{ "true"        if user(request) else "false" }},
+                "username":  "{{ user(request) if user(request) else "" }}"
+            }
+        </script>
+    </head>
 
-{% block heading %}
-    <h1>Index</h1>
-{% endblock %}
-
-
-{% macro render_item(item, name) %}
-    {% set readonly  = item.readonly %}
-    {% set type      = item.type %}
-    {% set is_object = item.is_object %}
-    {% set is_list   = item.is_list %}
-    {% set is_url    = item.is_url %}
-    {% set is_file   = item.is_file %}
-    <li>
-        <strong>{{ name }}:</strong>
-        {% if is_object %}
-            {{ type }}
-            {{ render_properties(item) }}
-        {% elif is_list %}
-            {{ type }}
-            <ul>
-                {{ render_items(item) }}
-            </ul>
-        {% elif is_file %}
-            {% set link = item.link %}
-            <a href="{{ link }}">download</a> {{ type }}
-        {% elif is_url %}
-            {% set value     = item.value %}
-            <a href="{{ value }}">{{ value }}</a> {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
-        {%- else %}
-            {% set value     = item.value %}
-            {{ value }} {{ type }}{% if readonly %}<sup>ro</sup>{% endif %}
-        {%- endif %}
-    </li>
-{%- endmacro %}
-
-
-{% macro render_items(list) %}
-    {% for item in list %}
-        {{ render_item(item, "") }}
-    {% endfor %}
-{%- endmacro %}
-
-
-{% macro render_properties(parent) -%}
-    {%- if len(parent.properties) > 0 -%}
-    <ul>
-        {% for prop_name, prop_instance in parent.properties.items() %}
-            {{ render_item(prop_instance, prop_name) }}
-        {% endfor %}
-    </ul>
-    {%- endif %}
-{%- endmacro %}
-
-
-{% macro render_events(device) -%}
-    {%- if len(device.events) > 0 -%}
-    <ul>
-        {% for ev_name, ev_instance in device.events.items() %}
-        <li>{{ ev_name }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    -none-
-    {%- endif %}
-{%- endmacro%}
-
-
-{% block content %}
-
-    <h3>Devices</h3>
-    <ul>
-    {% for device in devices %}
-        {% set name        = device.name %}
-        {% set description = device.description %}
-        <li>
-            {{ device }}
-            <ul>
-                <li><strong>Name:</strong> {{ name }}</li>
-                <li><strong>Description:</strong> {{ description }}</li>
-                <li><strong>Properties</strong>
-                    {{ render_properties(device) }}
-                </li>
-                <li><strong>Events</strong>
-                    {{ render_events(device) }}
-                </li>
-            </ul>
-        </li>
-    {% endfor %}
-    </ul>
-
-    <hr>
-
-    <h3>TODO</h3>
-    <ul>
-        <li>Adaptors with one/multiple Device(s)
-            <ul>
-                <li><strike>Yahoo Weather</strike></li>
-                <li>Fritzbox</li>
-                <li>KNX</li>
-                <li>serial port</li>
-                <li>amazon echo</li>
-                <li>ikea tadfri</li>
-                <li>THZ404</li>
-                <li><strike>Webcam</strike></li>
-            </ul>
-        </li>
-        <li>split yahoo weather in adaptor and device</li>
-        <li>Logic Editor</li>
-        <li>Visu / Dashboard ?</li>
-        <li>Archive</li>
-        <li>HTTPS</li>
-        <li>link multiple hubs</li>
-        <li>user management</li>
-        <li>scripts</li>
-    </ul>
-{% endblock %}
+    <body>
+        <div id="app" />
+        <script src="js/bundle.js"></script>
+    </body>
+</html>
