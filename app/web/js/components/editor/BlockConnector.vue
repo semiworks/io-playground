@@ -1,7 +1,8 @@
 <template>
-	<div v-on:mousedown.stop="handleMouseDown"
+	<div class="editor-connector"
+		 v-on:mousedown.stop="handleMouseDown"
 	     v-on:mouseup.stop="handleMouseUp">
-		x
+		&#x26AC;
 	</div>
 </template>
 
@@ -10,10 +11,16 @@ import helper from "@/helper.js"
 
 export default
 {
-	props: ["port"],
+	props: [ "port"],
 
 	methods:
 	{
+		coords: function()
+		{
+			let sheet = helper.getSheet(this);
+			return sheet.mapCoordinates(this, this.$el.clientWidth/2, this.$el.clientHeight/2);
+		},
+
 		handleMouseDown: function(ev)
 		{
 			let sheet = helper.getSheet(this);
@@ -22,7 +29,6 @@ export default
 
 		handleMouseUp: function(ev)
 		{
-			console.log('block connector: handleMouseUp');
 			let sheet = helper.getSheet(this);
 			sheet.connectEnd(this);
 		}

@@ -1,10 +1,13 @@
 <template>
-	<header>
-		<nav>
-			<router-link :to="{ name: 'index' }" >Home</router-link>
+	<nav>
+		<div class="navbar app-container">
+			<router-link :to="{ name: 'index' }" class="nav-logo-link">
+				<img src="images/logo.svg" />
+			</router-link>
+
 			<router-link :to="{ name: 'editor' }" >Editor</router-link>
-		</nav>
-	</header>
+		</div>
+	</nav>
 </template>
 
 <script>

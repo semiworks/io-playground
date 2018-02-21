@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="editor-main">
 		<block-list />
 		<sheet />
 	</div>

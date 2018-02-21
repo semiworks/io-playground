@@ -1,9 +1,7 @@
 <template>
-	<div>
-		<div>{{ block.text }}</div>
-		<block-port v-for="port in block.ports" :key="port.id" :port="port">
-			port
-		</block-port>
+	<div class="editor-block">
+		<div class="editor-blockheader">{{ block.text }}</div>
+		<block-port v-for="port in block.ports" :key="port.id" :port="port" />
 	</div>
 </template>
 
@@ -12,7 +10,7 @@ import BlockPort from './BlockPort.vue'
 
 export default
 {
-	props: ["block"],
+	props: [ "block" ],
 
 	components:
 	{

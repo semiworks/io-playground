@@ -1,5 +1,5 @@
 <template>
-	<svg height="100%" width="100%">
+	<svg class="editor-blocklink">
 		<line v-for="line in lines"
 			  :x1="line.x1"
 			  :y1="line.y1"
@@ -11,10 +11,11 @@
 <script>
 export default
 {
+	props: ['lines'],
+
 	data: function()
 	{
 		return {
-			lines: []
 		}
 	}
 }

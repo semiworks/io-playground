@@ -63,9 +63,44 @@ class ApiController(object):
                 'template': 'simple',
                 'ports'   : [
                     {
-                        'id'     : 'output',
-                        'name'   : 'Wert',
-                        'type'   : 'out'
+                        'id'  : 'port1',
+                        'name': 'Wert',
+                        'type': 'in'
+                    },
+                    {
+                        'id'  : 'port2',
+                        'name': 'Wert',
+                        'type': 'out'
+                    },
+                    {
+                        'id'  : 'port3',
+                        'name': 'Wert',
+                        'type': 'inout'
+                    },
+                    {
+                        'id'  : 'port4',
+                        'name': 'Wert',
+                        'type': 'out'
+                    },
+                    {
+                        'id'  : 'port5',
+                        'name': 'Wert',
+                        'type': 'in'
+                    },
+                    {
+                        'id'  : 'port6',
+                        'name': 'Wert',
+                        'type': 'in'
+                    },
+                    {
+                        'id'  : 'port7',
+                        'name': 'Wert',
+                        'type': 'inout'
+                    },
+                    {
+                        'id'  : 'port8',
+                        'name': 'Wert',
+                        'type': 'out'
                     }
                 ]
             }
