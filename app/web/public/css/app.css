@@ -10,13 +10,36 @@ body {
 }
 
 .app-container {
+	width: 100%;
 	max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 10px;
+	padding-right: 10px;
+	box-sizing: border-box;
 }
 
 .view-container {
+	display: flex;
+	flex-direction: column;
+}
+.view-container > *:last-child {
+	flex-grow: 2;
+}
+
+.content-container {
 	margin-top: 10px;
+}
+
+#app {
+	width: 100%;
+	min-height: 100%;
+	display: flex;
+    flex-direction: column;
+}
+
+#app > *:last-child {
+	flex-grow: 2;
 }
 
 /*
@@ -26,12 +49,14 @@ body {
 nav {
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 2px 3px rgba(0,0,0,.04);
+	height: 49px; /* 1px border = 50px height */
+	display: flex;
+	align-items: center;
 }
+
 .navbar {
 	display: flex;
 	align-items: center;
-	padding-top: 8px;
-	padding-bottom: 8px;
 }
 
 .navbar > *:not(:first-child) {
@@ -42,7 +67,6 @@ nav {
 }
 .navbar > a:not(.nav-logo-link) {
 	padding: 8px 20px;
-	align-self: center;
 	text-decoration: none;
 	color: #000;
 }
@@ -57,17 +81,32 @@ nav {
 }
 
 /*
- * editor view
+ * header
  */
-
-.editor-main {
-	display: flex;
+header {
+	border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 3px rgba(0,0,0,.04);
+    height: 49px; /* 1px border = 50px height */
+    background-color: #f5f5f5;
 }
 
+header > div {
+	height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/*
+ * editor view
+ */
+/*
+.editor-main {
+}
+*/
 .editor-sheet {
-	border: 1px solid lightgrey;
-	width: 600px;
-	height: 500px;
+	border: 1px solid #eee;
+	width: 100%;
+	height: calc(100% - 130px);
 	position: relative;
 	overflow: scroll;
 }

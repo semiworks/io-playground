@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 
 import IndexView from './views/Index.vue'
-import EditorView from './views/Editor.vue'
+import EditorIndexView from './views/EditorIndex.vue'
+import EditorNewView from './views/EditorNew.vue'
 
 Vue.use(VueRouter)
 
@@ -18,9 +19,20 @@ new Vue({
 				component: IndexView
 			},
 			{
-				name: 'editor',
 				path: '/editor',
-				component: EditorView
+				component: { template: '<router-view />' },
+				children: [
+					{
+						name: 'editor.index',
+						path: '',
+						component: EditorIndexView
+					},
+					{
+						name: 'editor.new',
+						path: 'new',
+						component: EditorNewView
+					}
+				]
 			}
 		]
     }),

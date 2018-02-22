@@ -5,7 +5,7 @@
 				<img src="images/logo.svg" />
 			</router-link>
 
-			<router-link :to="{ name: 'editor' }" >Editor</router-link>
+			<router-link :to="{ name: 'editor.index' }">Editor</router-link>
 		</div>
 	</nav>
 </template>
