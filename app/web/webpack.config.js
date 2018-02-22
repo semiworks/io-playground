@@ -23,7 +23,15 @@ const config = {
             'vue$': 'vue/dist/vue.esm.js',
             '@': path.resolve(__dirname, 'js')
         }
-    }
+    },
+
+    plugins: [
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                context: process.cwd()
+            }
+        })
+    ]
 };
 
 module.exports = config;

@@ -17,7 +17,9 @@
     "author": "Sebastian Michel",
     "license": "",
     "devDependencies": {
+        "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
         "vue-template-compiler": "^2.4.4",
-        "webpack": "^3.0.0"
+        "webpack": "^4.0.0-beta.2",
+        "webpack-cli": "^2.0.6"
     }
 }
