@@ -6,7 +6,11 @@
 
 		<div class="app-container content-container" style="display: flex; flex-direction: column; align-items: stretch;">
 
-			<div>toolbar</div>
+			<div>
+				<button>zurück</button>
+				<button>pausieren</button>
+				<button>bearbeiten</button>
+			</div>
 
 			<div style="display: flex; flex-direction: row; align-items: stretch; flex: 1;">
 				<block-list></block-list>
